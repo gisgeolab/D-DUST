@@ -84,8 +84,6 @@ def f_test(X_train, y_train, X_test, labels):
     fs.transform(X_test)
     barPlot_func_onedata(NormalizeData(fs.scores_), labels, "Fisher’s Score")
 
-   # for i in fs.scores_:
-   #     print(i)
 
 def chi2_test(X_train, y_train, X_test, labels):
     X_train = X_train.astype(int)
