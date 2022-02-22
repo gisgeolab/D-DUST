@@ -2,11 +2,11 @@
 ---
 ### Notebook description
 - ADS_API_Copernicus: Access to [Copernicus Atmosphere Monitoring Service](https://atmosphere.copernicus.eu/data) API and allows to export NetCDF files to be used as input in the grid_processing notebook.
-- ARPA_API_ground_sensors: Access to ARPA Ground Sensors API for both meteorological and air quality stations. It allows to export a geopackage file for each sensor type.
-- GEE_API: Access to Google Earth Engine API to retrieve satellite data. It allows to export .tif files for each selected variable.
+- ARPA_API_ground_sensors: Access to ARPA Ground Sensors for both meteorological and air quality stations. It allows to export a geopackage file for each sensor type. It is possible to download data directly from the API for the current year. For previous years .csv files from [Open Data Regione Lombardia](https://www.dati.lombardia.it/) are used.
+- GEE_API: Access to [Google Earth Engine API](https://developers.google.com/earth-engine/datasets) using [geemap](https://geemap.org/) library to retrieve satellite data. It allows to export .tif files for each selected variable.
 - grid_processing: it allows to calculate the mean value in each cell for all the selected variables.
 
-|Climate Data|
+### Climate Data
 |Variable|Description|Source|
 |---|---|---|
 |temp_2m|Mean air temperature at 2 m above the land surface|https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY|
