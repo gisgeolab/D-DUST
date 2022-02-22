@@ -198,6 +198,7 @@ dependencies:
   - rtree=0.9.7=py39h09fdee3_3
   - scikit-learn=1.0.2=py39he931e04_0
   - scipy=1.7.3=py39hc0c34ad_0
+  - seaborn=0.11.2=pyhd3eb1b0_0
   - send2trash=1.8.0=pyhd8ed1ab_0
   - setuptools=60.7.1=py39hcbf5309_0
   - shapely=1.8.0=py39h1db6edd_4
@@ -253,7 +254,7 @@ dependencies:
     - ffmpeg-python==0.2.0
     - future==0.18.2
     - geeadd==0.5.5
-    - geemap==0.11.2
+    - geemap==0.11.4
     - geocoder==1.38.1
     - geojson==2.5.0
     - google-api-core==2.5.0
