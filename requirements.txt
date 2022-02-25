@@ -4,3 +4,4 @@ sodapy == 2.1.0
 requests == 2.27.1
 ee == 0.2
 geemap == 0.11.4
+cdsapi == 0.5.1
