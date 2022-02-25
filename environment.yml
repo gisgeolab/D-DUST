@@ -11,19 +11,10 @@ dependencies:
   # Earth Engine
   - earthengine-api
   - geemap
-
-  # Jupyter environment
-  - jupyterlab
-  - notebook
-  - jupyter_contrib_nbextensions
-  - nbclean
-  - autopep8
-  - nb_black
   
   #Other
   - geopandas 
   - pandas
-  - sodapy 
   - requests 
   - cdsapi
   - xarray
