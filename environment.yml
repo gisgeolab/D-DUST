@@ -18,3 +18,8 @@ dependencies:
   - requests 
   - cdsapi
   - xarray
+  - rasterio
+  - rasterstats
+  - shapely
+  - rioxarray
+  - matplotlib
