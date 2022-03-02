@@ -208,7 +208,6 @@ def mgwr(data, labels):
     df = pd.DataFrame(data, columns=labels)
 
     X = df.to_numpy()
-    print(matrix_rank(X))
     lat = pd.DataFrame(data, columns=['lat'])
     lat = lat['lat'].tolist()
 
@@ -260,8 +259,6 @@ def mgwr(data, labels):
         print("critical_t(", labels[i], '): ', critical_ts[i + 1])
 
     mgwr_results.summary()
-
-    print("ok")
 
 
 
