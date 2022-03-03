@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[25]:
-
 
 def select_grid(grid):
     switcher = {
@@ -10,4 +8,4 @@ def select_grid(grid):
         's5p': '/grid/grid0_066.gpkg',
         'arpa': '/grid/grid0_01.gpkg'
     }
-    return switcher.get(grid, "Invalid year grid")
+    return switcher.get(grid, "Invalid grid")
