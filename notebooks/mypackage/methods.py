@@ -259,5 +259,6 @@ def mgwr(data, labels):
         print("adj_alpha(", labels[i], '): ', alphas[i + 1])
         print("critical_t(", labels[i], '): ', critical_ts[i + 1])
 
+    print("--betas coefficient--")
     for i in range(len(labels)):
         print(labels[i], ": ", np.mean(mgwr_results.params[:, i]), np.median(mgwr_results.params[:, i]))
