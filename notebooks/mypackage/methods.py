@@ -21,6 +21,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.tree import DecisionTreeClassifier
 
+
 def NormalizeData(data):
     return (data - np.min(data)) / (np.max(data) - np.min(data))
 
@@ -132,8 +133,8 @@ def exhaustive_feature_selection(X_train, y_train, labels):
     lr = LinearRegression()
 
     efs1 = EFS(lr,
-               min_features=4,
-               max_features=6,
+               min_features=2,
+               max_features=4,
                scoring='r2',
                n_jobs=-1,
                cv=5)
@@ -163,7 +164,6 @@ def RF_importance(X_train, y_train, labels):
 
 
 def detect_n_feature_RFE(X, y):
-
     X = X.to_numpy()
     # create pipeline
     rfe = RFECV(estimator=DecisionTreeClassifier())
@@ -213,6 +213,7 @@ def mgwr(data, labels):
 
     lon = pd.DataFrame(data, columns=['lon'])
     lon = lon['lon'].tolist()
+    print(matrix_rank(X))
 
     coords = list(zip(lat, lon))
 
@@ -223,7 +224,6 @@ def mgwr(data, labels):
     Y = Y.reshape((-1, 1))
 
     Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
-
     sel = Sel_BW(coords, Y, X)
 
     bw = sel.search()
@@ -241,6 +241,7 @@ def mgwr(data, labels):
 
     mgwr = MGWR(coords, Y, X, selector, constant=True)
     mgwr_results = mgwr.fit()
+
     print('aicc:', mgwr_results.aicc)
     print('sigma2:', mgwr_results.sigma2)
     print('ENP(model):', mgwr_results.ENP)
@@ -258,7 +259,5 @@ def mgwr(data, labels):
         print("adj_alpha(", labels[i], '): ', alphas[i + 1])
         print("critical_t(", labels[i], '): ', critical_ts[i + 1])
 
-    mgwr_results.summary()
-
-
-
+    for i in range(len(labels)):
+        print(labels[i], ": ", np.mean(mgwr_results.params[:, i]), np.median(mgwr_results.params[:, i]))
