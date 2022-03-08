@@ -9,6 +9,7 @@ from numpy.linalg import matrix_rank
 from scipy.stats import gmean
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn import preprocessing
 from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_selection import SelectKBest, f_regression, f_classif, VarianceThreshold, RFE, RFECV
@@ -19,6 +20,7 @@ from sklearn.linear_model import LinearRegression
 from mlxtend.feature_selection import ExhaustiveFeatureSelector as EFS
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
 
 
@@ -55,6 +57,10 @@ def pearson(X, Y, labels):
     pearson = NormalizeData(pearson)
     barPlot_func_onedata(pearson, labels, "Pearson Index")
 
+    tuple = ["Pearson Index", [pearson]]
+
+    return tuple
+
 
 def spearmanr(X, Y, labels):
     spearmanr = []
@@ -62,7 +68,10 @@ def spearmanr(X, Y, labels):
         spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
 
     spearmanr = NormalizeData(spearmanr)
+    tuple = ["Spearmanr Rho", [spearmanr]]
+
     barPlot_func_onedata(spearmanr, labels, "Spearmanr Rho")
+    return tuple
 
 
 def kendall(X, Y, labels):
@@ -71,10 +80,17 @@ def kendall(X, Y, labels):
         kendall.append(scipy.stats.kendalltau(columnData, Y)[0])
 
     kendall = NormalizeData(kendall)
+
+    tuple = ["Kendall Tau", [kendall]]
+
     barPlot_func_onedata(kendall, labels, "Kendall Tau")
+    return tuple
 
 
-def f_test(X_train, y_train, X_test, labels):
+def f_test(X, y, labels):
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=1)
+
     # configure to select all features
     fs = SelectKBest(score_func=f_regression, k='all')
     # learn relationship from training data
@@ -83,16 +99,18 @@ def f_test(X_train, y_train, X_test, labels):
     fs.transform(X_train)
     # transform test input data
     fs.transform(X_test)
+    tuple = ["Fisher’s Score", NormalizeData(fs.scores_)]
     barPlot_func_onedata(NormalizeData(fs.scores_), labels, "Fisher’s Score")
+    return tuple
 
+def chi2_test(X, y, labels):
+    X = X.astype(int)
+    y = y.astype(int)
 
-def chi2_test(X_train, y_train, X_test, labels):
-    X_train = X_train.astype(int)
-    y_train = y_train.astype(int)
-    X_test = X_test.astype(int)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=1)
 
     # configure to select all features
-    fs = SelectKBest(score_func=chi2, k='all')
+    fs = SelectKBest(score_func=f_regression, k='all')
     # learn relationship from training data
     fs.fit(X_train, y_train)
     # transform train input data
@@ -100,20 +118,24 @@ def chi2_test(X_train, y_train, X_test, labels):
     # transform test input data
     fs.transform(X_test)
     barPlot_func_onedata(NormalizeData(fs.scores_), labels, "Chi-Square Score")
+    tuple = ["Chi-Square Score", NormalizeData(fs.scores_)]
+    return tuple
 
 
 def compute_dispersion_ratio(X, labels):
     dispersion_ratio = []
 
-    for (columnName, columnData) in X.iteritems():
-        x_new = [i for i in columnData if i != 0]
-        dispersion_ratio.append(statistics.mean(x_new) / gmean(x_new))
+    for i in range(len(X[0])):
+        dispersion_ratio.append(statistics.mean(X[:,i]) / gmean(X[:,i]))
 
     barPlot_func_onedata(dispersion_ratio, labels, 'Dispersion Ratio for each variable')
 
     for i in range(len(labels)):
         print(labels[i], ': ', dispersion_ratio[i])
 
+    tuple=['Dispersion Ratio for each variable', dispersion_ratio]
+
+    return tuple
 
 def variance_threshold(X_train, labels):
     # define thresholds to check
@@ -122,14 +144,16 @@ def variance_threshold(X_train, labels):
     selector = VarianceThreshold(threshold=0)
     selector.fit_transform(X_train)
     barPlot_func_onedata(NormalizeData(selector.variances_), labels, "Variance Threshold")
+    tuple = ['Variance Threshold', NormalizeData(selector.variances_) ]
+    return tuple
 
 
-def exhaustive_feature_selection(X_train, y_train, labels):
+def exhaustive_feature_selection(X, y, labels):
     import warnings
     warnings.filterwarnings("ignore")
 
-    X = X_train.to_numpy()
-    y = y_train.astype(int)
+    X = X.to_numpy()
+    y = y.astype(int)
     lr = LinearRegression()
 
     efs1 = EFS(lr,
@@ -147,21 +171,23 @@ def exhaustive_feature_selection(X_train, y_train, labels):
         print(labels[i])
 
 
-def RF_importance(X_train, y_train, labels):
+
+def RF_importance(X, y, labels):
     # define the model
     model = RandomForestRegressor()
 
     # fit the model
-    model.fit(X_train, y_train)
+    model.fit(X, y)
 
     # get importance
     importance = NormalizeData(model.feature_importances_)
+    tuple = ['Random Forest Importance', importance]
     # summarize feature importance
     for i, v in enumerate(importance):
         print(labels[i], ': ', '%.5f' % (v))
     # plot feature importance
     barPlot_func_onedata(importance, labels, "Random Forest Importance")
-
+    return tuple
 
 def detect_n_feature_RFE(X, y):
     X = X.to_numpy()
@@ -175,15 +201,15 @@ def detect_n_feature_RFE(X, y):
     print('Accuracy: %.3f (%.3f)' % (statistics.mean(n_scores), std(n_scores)))
 
 
-def recursive_feature_selection(X_train, y_train, labels, select):
+def recursive_feature_selection(X, y, labels, select):
     warnings.filterwarnings("ignore")
     # define RFE
     rfe = RFE(estimator=DecisionTreeClassifier(), n_features_to_select=select)
     # fit RFE
-    rfe.fit(X_train, y_train)
+    rfe.fit(X, y)
     # summarize all features
 
-    for i in range(X_train.shape[1]):
+    for i in range(X.shape[1]):
         print('Label: %s, Selected=%s, Rank: %s' % (labels[i], rfe.support_[i], rfe.ranking_[i]))
 
 
@@ -239,6 +265,7 @@ def mgwr(data, labels):
         print("bw(", labels[i], '): ', bw[i + 1])
     print('\n')
 
+    tuple = ["MGWR Bandwidths", bw]
     mgwr = MGWR(coords, Y, X, selector, constant=True)
     mgwr_results = mgwr.fit()
 
@@ -262,3 +289,6 @@ def mgwr(data, labels):
     print("--betas coefficient--")
     for i in range(len(labels)):
         print(labels[i], ": ", np.mean(mgwr_results.params[:, i]), np.median(mgwr_results.params[:, i]))
+
+    tuple.append(["Beta Coefficient", [[mgwr_results.mean(axis=0)], [mgwr_results.median(axis=0)]]])
+    return tuple
