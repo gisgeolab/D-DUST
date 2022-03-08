@@ -32,7 +32,7 @@ def NormalizeData(data):
 def barPlot_func_onedata(values, plot_name):
     fig = px.bar(values, y='Scores', x='Variables', text_auto='0.2f', title=plot_name)
     fig.show()
-
+    
 
 def pearson(X, Y, labels):
     pearson = []
