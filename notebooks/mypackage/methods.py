@@ -1,5 +1,4 @@
 import warnings
-
 import scipy.stats
 import pandas as pd
 from mgwr.gwr import GWR, MGWR
@@ -23,30 +22,16 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
 
+import plotly.express as px
+
 
 def NormalizeData(data):
     return (data - np.min(data)) / (np.max(data) - np.min(data))
 
 
-def barPlot_func_onedata(values, varLabels, plot_name):
-    fig = plt.figure()
-    ax = fig.add_axes([0, 0, 1, 1])
-
-    ax.set_ylabel('Scores')
-    ax.set_title(plot_name)
-    r = np.arange(len(varLabels))
-    width = 0.75
-
-    ax.bar(r, values, color='b',
-           width=width,
-           )
-
-    plt.xticks(r + width / 2, varLabels)
-    plt.xticks(rotation=90)
-
-    plt.xlabel('Variables')
-    plt.ylabel('Dispersion Ratio')
-    plt.show()
+def barPlot_func_onedata(values, plot_name):
+    fig = px.bar(values, y='Scores', x='Variables', text_auto='0.2f', title=plot_name)
+    fig.show()
 
 
 def pearson(X, Y, labels):
@@ -55,11 +40,14 @@ def pearson(X, Y, labels):
         pearson.append(scipy.stats.pearsonr(columnData, Y)[0])
 
     pearson = NormalizeData(pearson)
-    barPlot_func_onedata(pearson, labels, "Pearson Index")
 
-    tuple = ["Pearson Index", [pearson]]
+    results = pd.DataFrame()
+    results['Scores'] = pearson
+    results['Variables'] = labels
 
-    return tuple
+    barPlot_func_onedata(results, "Pearson Index")
+
+    return results
 
 
 def spearmanr(X, Y, labels):
@@ -68,10 +56,13 @@ def spearmanr(X, Y, labels):
         spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
 
     spearmanr = NormalizeData(spearmanr)
-    tuple = ["Spearmanr Rho", [spearmanr]]
 
-    barPlot_func_onedata(spearmanr, labels, "Spearmanr Rho")
-    return tuple
+    results = pd.DataFrame()
+    results['Scores'] = spearmanr
+    results['Variables'] = labels
+
+    barPlot_func_onedata(results , "Spearmanr Rho")
+    return results
 
 
 def kendall(X, Y, labels):
@@ -81,14 +72,15 @@ def kendall(X, Y, labels):
 
     kendall = NormalizeData(kendall)
 
-    tuple = ["Kendall Tau", [kendall]]
+    results = pd.DataFrame()
+    results['Scores'] = kendall
+    results['Variables'] = labels
 
-    barPlot_func_onedata(kendall, labels, "Kendall Tau")
-    return tuple
+    barPlot_func_onedata(results, "Kendall Tau")
+    return results
 
 
 def f_test(X, y, labels):
-
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=1)
 
     # configure to select all features
@@ -99,9 +91,14 @@ def f_test(X, y, labels):
     fs.transform(X_train)
     # transform test input data
     fs.transform(X_test)
-    tuple = ["Fisher’s Score", NormalizeData(fs.scores_)]
-    barPlot_func_onedata(NormalizeData(fs.scores_), labels, "Fisher’s Score")
-    return tuple
+
+    results = pd.DataFrame()
+    results['Scores'] = NormalizeData(fs.scores_)
+    results['Variables'] = labels
+
+    barPlot_func_onedata(results, "Fisher’s Score")
+    return results
+
 
 def chi2_test(X, y, labels):
     X = X.astype(int)
@@ -117,25 +114,34 @@ def chi2_test(X, y, labels):
     fs.transform(X_train)
     # transform test input data
     fs.transform(X_test)
-    barPlot_func_onedata(NormalizeData(fs.scores_), labels, "Chi-Square Score")
-    tuple = ["Chi-Square Score", NormalizeData(fs.scores_)]
-    return tuple
+
+    results = pd.DataFrame()
+    results['Scores'] = NormalizeData(fs.scores_)
+    results['Variables'] = labels
+
+    barPlot_func_onedata(results,  "Chi-Square Score")
+    return results
 
 
 def compute_dispersion_ratio(X, labels):
     dispersion_ratio = []
 
     for i in range(len(X[0])):
-        dispersion_ratio.append(statistics.mean(X[:,i]) / gmean(X[:,i]))
+        dispersion_ratio.append(statistics.mean(X[:, i]) / gmean(X[:, i]))
 
-    barPlot_func_onedata(dispersion_ratio, labels, 'Dispersion Ratio for each variable')
+    results = pd.DataFrame()
+    results['Scores'] = dispersion_ratio
+    results['Variables'] = labels
+
+    barPlot_func_onedata(dispersion_ratio, 'Dispersion Ratio for each variable')
 
     for i in range(len(labels)):
         print(labels[i], ': ', dispersion_ratio[i])
 
-    tuple=['Dispersion Ratio for each variable', dispersion_ratio]
 
-    return tuple
+
+    return results
+
 
 def variance_threshold(X_train, labels):
     # define thresholds to check
@@ -143,9 +149,13 @@ def variance_threshold(X_train, labels):
     # apply transform with each threshold
     selector = VarianceThreshold(threshold=0)
     selector.fit_transform(X_train)
-    barPlot_func_onedata(NormalizeData(selector.variances_), labels, "Variance Threshold")
-    tuple = ['Variance Threshold', NormalizeData(selector.variances_) ]
-    return tuple
+
+    results = pd.DataFrame()
+    results['Scores'] = NormalizeData(selector.variances_)
+    results['Variables'] = labels
+
+    barPlot_func_onedata(results, "Variance Threshold")
+    return results
 
 
 def exhaustive_feature_selection(X, y, labels):
@@ -171,23 +181,21 @@ def exhaustive_feature_selection(X, y, labels):
         print(labels[i])
 
 
-
 def RF_importance(X, y, labels):
     # define the model
     model = RandomForestRegressor()
-
     # fit the model
     model.fit(X, y)
-
     # get importance
     importance = NormalizeData(model.feature_importances_)
-    tuple = ['Random Forest Importance', importance]
-    # summarize feature importance
-    for i, v in enumerate(importance):
-        print(labels[i], ': ', '%.5f' % (v))
+    results = pd.DataFrame()
+    results['Scores'] = importance
+    results['Variables'] = labels
+
     # plot feature importance
-    barPlot_func_onedata(importance, labels, "Random Forest Importance")
-    return tuple
+    barPlot_func_onedata(results, "Random Forest Importance")
+    return results
+
 
 def detect_n_feature_RFE(X, y):
     X = X.to_numpy()
