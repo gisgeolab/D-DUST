@@ -256,6 +256,7 @@ dependencies:
     - bqplot==0.12.32
     - cachetools==5.0.0
     - colour==0.1.5
+    - dill==0.3.4
     - earthengine-api==0.1.297
     - ee==0.2
     - ee-extra==0.0.10
@@ -286,12 +287,15 @@ dependencies:
     - jupyterlab-widgets==1.0.2
     - logzero==1.7.0
     - mss==6.1.0
+    - openturns==1.18
     - owslib==0.25.0
     - plotly==5.5.0
     - protobuf==3.19.4
+    - psutil==5.9.0
     - pyasn1==0.4.8
     - pyasn1-modules==0.2.8
     - pycrs==1.0.2
+    - pykrige==1.6.1
     - pyshp==2.2.0
     - python-box==5.4.1
     - pyyaml==6.0
