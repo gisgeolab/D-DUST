@@ -22,6 +22,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
 import plotly.graph_objects as go
+import warnings
 
 import plotly.express as px
 
@@ -175,7 +176,6 @@ def variance_threshold(X_train, labels):
 
 
 def exhaustive_feature_selection(X, y, labels):
-    import warnings
     warnings.filterwarnings("ignore")
 
     X = X.to_numpy()
