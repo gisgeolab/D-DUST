@@ -21,6 +21,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
+import plotly.graph_objects as go
 
 import plotly.express as px
 
@@ -30,9 +31,24 @@ def NormalizeData(data):
 
 
 def barPlot_func_onedata(values, plot_name):
-    fig = px.bar(values, y='Scores', x='Variables', text_auto='0.2f', title=plot_name)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Bar(
+            x=values['Variables'],
+            y=values['Scores']
+        ))
     fig.show()
-    
+    print('ok')
+
+
+    #fig = px.bar(values, y='Scores', x='Variables', text_auto='0.2f', title=plot_name)
+    #fig.show()
+
+def histogram_func(values, plot_name):
+    return go.Bar(
+            x=values['Variables'],
+            y=values['Scores']
+        )
 
 def pearson(X, Y, labels):
     pearson = []
