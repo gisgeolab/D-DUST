@@ -288,6 +288,12 @@ def mgwr(data, labels):
     for i in range(len(labels)):
         print("bw(", labels[i], '): ', bw[i + 1])
     print('\n')
+    results = pd.DataFrame()
+
+    results['Variables'] = labels
+    results['Bandwidth'] = bw.pop(0)
+
+
 
     tuple = ["MGWR Bandwidths", bw]
     mgwr = MGWR(coords, Y, X, selector, constant=True)
@@ -310,9 +316,8 @@ def mgwr(data, labels):
         print("adj_alpha(", labels[i], '): ', alphas[i + 1])
         print("critical_t(", labels[i], '): ', critical_ts[i + 1])
 
-    print("--betas coefficient--")
-    for i in range(len(labels)):
-        print(labels[i], ": ", np.mean(mgwr_results.params[:, i]), np.median(mgwr_results.params[:, i]))
 
-    tuple.append(["Beta Coefficient", [[mgwr_results.mean(axis=0)], [mgwr_results.median(axis=0)]]])
+    tuple['Beta_Mean'] = mgwr_results.mean(axis=0)
+    tuple['Beta_Median'] = mgwr_results.median(axis=0)
+
     return tuple
