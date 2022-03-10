@@ -280,14 +280,10 @@ def mgwr(data, labels, coords, y):
     print('bw:', bw)
 
     selector = Sel_BW(coords, Y, X, multi=True, constant=True)
-    bw = selector.search(multi_bw_min=[2], multi_bw_max=[159])
+    bw = selector.search(multi_bw_min=[2])
 
     print("bw( intercept ):", bw[0])
 
-    print('\n')
-    for i in range(len(labels)):
-        print("bw(", labels[i], '): ', bw[i + 1])
-    print('\n')
     results = pd.DataFrame()
 
     results['Variables'] = labels
