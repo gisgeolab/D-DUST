@@ -1,4 +1,6 @@
 {
-	"start_date": "2020-02-01",
-	"end_date": "2020-02-29"
+	"year": 2020,
+	"mais_week": 9,
+	"rice_week": 13,
+	"cereal_week": 35
 }
