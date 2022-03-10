@@ -253,28 +253,28 @@ def evaluate_model(model, X1, y1):
     return scores
 
 
-def mgwr(data, labels):
+def mgwr(data, labels, coords, y):
     warnings.filterwarnings("ignore")
-    df = pd.DataFrame(data, columns=labels)
+    df = pd.DataFrame(data, columns=labels).dropna()
+    X = df.drop(['prim_road','sec_road','highway','farms'], axis=1)
 
-    X = df.to_numpy()
-    lat = pd.DataFrame(data, columns=['lat'])
-    lat = lat['lat'].tolist()
+    X = X.to_numpy()
+  #  lat = pd.DataFrame(data, columns=['lat'])
+   # lat = lat['lat'].tolist()
 
-    lon = pd.DataFrame(data, columns=['lon'])
-    lon = lon['lon'].tolist()
-    print(matrix_rank(X))
+  #  lon = pd.DataFrame(data, columns=['lon'])
+  #  lon = lon['lon'].tolist()
+  #  print(matrix_rank(X))
 
-    coords = list(zip(lat, lon))
-
-    Y = pd.DataFrame(data, columns=['FBpop_tot']).to_numpy()
+    #coords = list(zip(lat, lon))
 
     X = (X - X.mean(axis=0)) / X.std(axis=0)
 
-    Y = Y.reshape((-1, 1))
+    Y = y.reshape((-1, 1))
 
     Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
     sel = Sel_BW(coords, Y, X)
+
 
     bw = sel.search()
     print('bw:', bw)
