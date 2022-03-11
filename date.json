@@ -1,6 +1,6 @@
 {
 	"year": 2020,
-	"mais_week": 9,
-	"rice_week": 13,
-	"cereal_week": 35
+	"mais_week": [9,10],
+	"rice_week": [13,14,15],
+	"cereal_week": [35]
 }
