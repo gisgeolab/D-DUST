@@ -254,7 +254,6 @@ def evaluate_model(model, X1, y1):
 
 
 def mgwr(data, labels, coords, y):
-    warnings.filterwarnings("ignore")
     df = pd.DataFrame(data, columns=labels).dropna()
     X = df.drop(['prim_road','sec_road','highway','farms'], axis=1)
 
@@ -287,7 +286,8 @@ def mgwr(data, labels, coords, y):
     results = pd.DataFrame()
 
     results['Variables'] = labels
-    results['Bandwidth'] = bw.pop(0)
+    bw = np.delete(bw, 0)
+    results['Bandwidth'] = bw
 
 
 
