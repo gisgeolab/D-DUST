@@ -233,10 +233,13 @@ def recursive_feature_selection(X, y, labels, select):
     rfe.fit(X, y)
     # summarize all features
 
-    for i in range(X.shape[1]):
-        print('Label: %s, Selected=%s, Rank: %s' % (labels[i], rfe.support_[i], rfe.ranking_[i]))
 
+    results = pd.DataFrame()
+    results['Variables']=labels
+    results['isSelected'] = rfe.support_
+    results['Ranking']=rfe.ranking_[i]
 
+    return results
 def get_models():
     models = dict()
     for i in range(2, 10):
@@ -253,10 +256,13 @@ def evaluate_model(model, X1, y1):
     return scores
 
 
+
 def mgwr(data, labels, coords, y):
     df = pd.DataFrame(data, columns=labels).dropna()
-    X = df.drop(['prim_road','sec_road','highway','farms'], axis=1)
 
+
+    X = df.drop(['prim_road','sec_road','highway','farms'], axis=1)
+    labels =list(X.columns)
     X = X.to_numpy()
   #  lat = pd.DataFrame(data, columns=['lat'])
    # lat = lat['lat'].tolist()
@@ -278,12 +284,17 @@ def mgwr(data, labels, coords, y):
     bw = sel.search()
     print('bw:', bw)
 
+
     selector = Sel_BW(coords, Y, X, multi=True, constant=True)
     bw = selector.search(multi_bw_min=[2])
 
     print("bw( intercept ):", bw[0])
 
     results = pd.DataFrame()
+
+
+
+
 
     results['Variables'] = labels
     bw = np.delete(bw, 0)
