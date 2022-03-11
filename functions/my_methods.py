@@ -55,6 +55,7 @@ def manuring_periods(year, mais_w, rice_w, cereal_w):
     # creating the plot
     fig = calplot(all_dates, x="date", y="value")
     fig.show()
+    return calendar
 
 
 def AQ_sensor(year):
