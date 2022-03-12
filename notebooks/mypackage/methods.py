@@ -237,7 +237,7 @@ def recursive_feature_selection(X, y, labels, select):
     results = pd.DataFrame()
     results['Variables']=labels
     results['isSelected'] = rfe.support_
-    results['Ranking']=rfe.ranking_[i]
+    results['Ranking']=rfe.ranking_
 
     return results
 def get_models():
@@ -323,8 +323,13 @@ def mgwr(data, labels, coords, y):
         print("adj_alpha(", labels[i], '): ', alphas[i + 1])
         print("critical_t(", labels[i], '): ', critical_ts[i + 1])
 
+        
+    median = mgwr_results.params.median(axis=0)
 
-    tuple['Beta_Mean'] = mgwr_results.mean(axis=0)
-    tuple['Beta_Median'] = mgwr_results.median(axis=0)
+    mean = mgwr_results.params.mean(axis=0)
 
-    return tuple
+    results['Beta_Mean'] = mean
+    results['Beta_Median'] = median
+
+
+    return results
