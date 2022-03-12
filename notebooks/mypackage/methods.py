@@ -302,7 +302,6 @@ def mgwr(data, labels, coords, y):
 
 
 
-    tuple = ["MGWR Bandwidths", bw]
     mgwr = MGWR(coords, Y, X, selector, constant=True)
     mgwr_results = mgwr.fit()
 
@@ -324,9 +323,12 @@ def mgwr(data, labels, coords, y):
         print("critical_t(", labels[i], '): ', critical_ts[i + 1])
 
         
-    median = mgwr_results.params.median(axis=0)
+    median = np.median(mgwr_results.params(axis=0))
 
-    mean = mgwr_results.params.mean(axis=0)
+    mean = np.mean(mgwr_results.params(axis=0))
+
+    mean = np.delete(mean, 0)
+    median = np.median(median, 0)
 
     results['Beta_Mean'] = mean
     results['Beta_Median'] = median
