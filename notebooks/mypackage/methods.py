@@ -290,16 +290,10 @@ def mgwr(data, labels, coords, y):
 
     print("bw( intercept ):", bw[0])
 
-    results = pd.DataFrame()
 
+    df_bw = pd.DataFrame(bw)
 
-
-
-
-    results['Variables'] = labels
-    bw = np.delete(bw, 0)
-    results['Bandwidth'] = bw
-
+    df_bw.to_csv(r'results/mgwr_bw.csv', index=False)
 
 
     mgwr = MGWR(coords, Y, X, selector, constant=True)
@@ -322,16 +316,7 @@ def mgwr(data, labels, coords, y):
         print("adj_alpha(", labels[i], '): ', alphas[i + 1])
         print("critical_t(", labels[i], '): ', critical_ts[i + 1])
 
-        
-    median = np.median(mgwr_results.params(axis=0))
+    df_betas = pd.DataFrame(mgwr_results.params)
 
-    mean = np.mean(mgwr_results.params(axis=0))
+    df_betas.to_csv(r'results/mgwr_betas.csv', index=False)
 
-    mean = np.delete(mean, 0)
-    median = np.median(median, 0)
-
-    results['Beta_Mean'] = mean
-    results['Beta_Median'] = median
-
-
-    return results
