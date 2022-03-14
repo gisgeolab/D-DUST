@@ -19,7 +19,6 @@ dependencies:
     - plotly
     - scipy
     - sodapy
-    - json
     - datetime
     - zipfile
     - cdsapi
