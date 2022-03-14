@@ -1,7 +1,6 @@
 name: ddust
 channels:
   - conda-forge
-  - defaults
 dependencies:
   - geopandas
   - geemap
@@ -13,6 +12,7 @@ dependencies:
   - rasterstats
   - rioxarray
   - shapely
+  - pip
   - pip:
     - ee
     - matplotlib
