@@ -15,16 +15,18 @@ dependencies:
   - backports.functools_lru_cache=1.6.4=pyhd8ed1ab_0
   - black=22.1.0=pyhd8ed1ab_0
   - bleach=4.1.0=pyhd8ed1ab_0
+  - bokeh=2.4.2=py39hcbf5309_0
   - boost-cpp=1.74.0=h5b4e17d_5
+  - bottleneck=1.3.4=py39h5d4886f_0
   - branca=0.4.2=pyhd8ed1ab_0
   - brotli=1.0.9=h8ffe710_6
   - brotli-bin=1.0.9=h8ffe710_6
   - brotlipy=0.7.0=py39hb82d6ee_1003
   - bzip2=1.0.8=h8ffe710_4
-  - ca-certificates=2022.2.1=haa95532_0
+  - ca-certificates=2021.10.8=h5b45459_0
   - cairo=1.16.0=hb19e0ff_1008
   - cdsapi=0.5.1=pyhd8ed1ab_0
-  - certifi=2021.10.8=py39haa95532_2
+  - certifi=2021.10.8=py39hcbf5309_1
   - cffi=1.15.0=py39h0878f49_0
   - cfitsio=4.0.0=hd67004f_0
   - cftime=1.5.1.1=py39h080aedc_0
@@ -32,10 +34,13 @@ dependencies:
   - click=8.0.3=py39hcbf5309_1
   - click-plugins=1.1.1=py_0
   - cligj=0.7.2=pyhd8ed1ab_1
+  - cloudpickle=2.0.0=pyhd8ed1ab_0
   - colorama=0.4.4=pyh9f0ad1d_0
   - cryptography=36.0.1=py39h7bc7c5c_0
   - curl=7.81.0=h789b8ee_0
   - cycler=0.11.0=pyhd8ed1ab_0
+  - cytoolz=0.11.2=py39hb82d6ee_1
+  - dask-core=2021.10.0=pyhd3eb1b0_0
   - dataclasses=0.8=pyhc8e2a94_3
   - debugpy=1.5.1=py39h415ef7b_0
   - decorator=5.1.1=pyhd8ed1ab_0
@@ -59,6 +64,7 @@ dependencies:
   - freetype=2.10.4=h546665d_1
   - freexl=1.0.6=ha8e266a_0
   - fribidi=1.0.10=h8d14728_0
+  - fsspec=2022.2.0=pyhd8ed1ab_0
   - gdal=3.3.3=py39h3f5efd6_11
   - geopandas=0.10.2=pyhd8ed1ab_1
   - geopandas-base=0.10.2=pyha770c72_1
@@ -67,6 +73,7 @@ dependencies:
   - gettext=0.19.8.1=ha2e2712_1008
   - hdf4=4.2.15=h0e5069d_3
   - hdf5=1.12.1=nompi_h2a0e4a3_103
+  - heapdict=1.0.1=py_0
   - icu=68.2=h0e60522_0
   - idna=3.3=pyhd8ed1ab_0
   - importlib-metadata=4.10.1=py39hcbf5309_0
@@ -135,11 +142,11 @@ dependencies:
   - m2w64-libwinpthread-git=5.0.0.4634.697f757=2
   - mapclassify=2.4.3=pyhd8ed1ab_0
   - markupsafe=2.0.1=py39hb82d6ee_1
-  - matplotlib=3.5.1=py39hcbf5309_0
   - matplotlib-base=3.5.1=py39h581301d_0
   - matplotlib-inline=0.1.3=pyhd8ed1ab_0
   - mistune=0.8.4=py39hb82d6ee_1005
   - mkl=2022.0.0=h0e2418a_796
+  - msgpack-python=1.0.3=py39h2e07f2f_0
   - msys2-conda-epoch=20160418=1
   - munch=2.5.0=py_0
   - munkres=1.1.4=pyh9f0ad1d_0
@@ -152,15 +159,15 @@ dependencies:
   - netcdf4=1.5.7=py39h3de5c98_1
   - networkx=2.6.3=pyhd8ed1ab_1
   - notebook=6.4.8=pyha770c72_0
-  - numpy=1.22.2=py39h6331f09_0
   - openjpeg=2.4.0=hb211442_1
-  - openssl=1.1.1m=h2bbff1b_0
+  - openssl=1.1.1l=h8ffe710_0
   - packaging=21.3=pyhd8ed1ab_0
   - palettable=3.3.0=pyhd3eb1b0_0
   - pandas=1.4.0=py39h2e25243_0
   - pandoc=2.17.1.1=h57928b3_0
   - pandocfilters=1.5.0=pyhd8ed1ab_0
   - parso=0.8.3=pyhd8ed1ab_0
+  - partd=1.2.0=pyhd8ed1ab_0
   - pathspec=0.9.0=pyhd8ed1ab_0
   - pcre=8.45=h0e60522_0
   - pickleshare=0.7.5=py_1003
@@ -174,6 +181,7 @@ dependencies:
   - proj=8.2.0=h1cfcee9_0
   - prometheus_client=0.13.1=pyhd8ed1ab_0
   - prompt-toolkit=3.0.26=pyha770c72_0
+  - psutil=5.9.0=py39hb82d6ee_0
   - pthread-stubs=0.4=hcd874cb_1001
   - pure_eval=0.2.2=pyhd8ed1ab_0
   - pycparser=2.21=pyhd8ed1ab_0
@@ -195,34 +203,34 @@ dependencies:
   - pytz=2021.3=pyhd8ed1ab_0
   - pywin32=303=py39hb82d6ee_0
   - pywinpty=2.0.2=py39h99910a6_0
+  - pyyaml=6.0=py39hb82d6ee_3
   - pyzmq=22.3.0=py39he46f08e_1
   - qt=5.12.9=h5909a2a_4
   - rasterio=1.2.10=py39h25176d1_2
   - rasterstats=0.16.0=pyhd8ed1ab_0
   - requests=2.27.1=pyhd8ed1ab_0
-  - rioxarray=0.9.1=pyhd8ed1ab_0
   - rtree=0.9.7=py39h09fdee3_3
   - scikit-learn=1.0.2=py39he931e04_0
-  - scipy=1.7.3=py39hc0c34ad_0
   - seaborn=0.11.2=pyhd3eb1b0_0
   - send2trash=1.8.0=pyhd8ed1ab_0
   - setuptools=60.7.1=py39hcbf5309_0
-  - shapely=1.8.0=py39h1db6edd_4
   - simplejson=3.17.6=py39hb82d6ee_0
   - six=1.16.0=pyh6c4a22f_0
   - sniffio=1.2.0=py39hcbf5309_2
   - snuggs=1.4.7=py_0
+  - sortedcontainers=2.4.0=pyhd8ed1ab_0
   - sqlite=3.37.0=h8ffe710_0
   - stack_data=0.1.4=pyhd8ed1ab_0
   - tbb=2021.5.0=h2d74725_0
+  - tblib=1.7.0=pyhd8ed1ab_0
   - terminado=0.13.1=py39hcbf5309_0
   - testpath=0.5.0=pyhd8ed1ab_0
   - threadpoolctl=3.1.0=pyh8a188c0_0
   - tiledb=2.5.3=h95dad36_0
   - tk=8.6.11=h8ffe710_1
   - tomli=2.0.0=pyhd8ed1ab_1
+  - toolz=0.11.2=pyhd8ed1ab_0
   - tornado=6.1=py39hb82d6ee_2
-  - tqdm=4.62.3=pyhd8ed1ab_0
   - traitlets=5.1.1=pyhd8ed1ab_0
   - typed-ast=1.5.2=py39hb82d6ee_0
   - typing_extensions=4.0.1=pyha770c72_0
@@ -246,24 +254,37 @@ dependencies:
   - xorg-libxdmcp=1.1.3=hcd874cb_0
   - xyzservices=2022.1.1=pyhd8ed1ab_0
   - xz=5.2.5=h62dcd97_1
+  - yaml=0.2.5=h8ffe710_2
   - zeromq=4.3.4=h0e60522_1
+  - zict=2.1.0=pyhd8ed1ab_0
   - zipp=3.7.0=pyhd8ed1ab_1
   - zlib=1.2.11=h8ffe710_1013
   - zstd=1.5.2=h6255e5f_0
   - pip:
+    - appdirs==1.4.4
+    - asciitree==0.3.3
     - beautifulsoup4==4.10.0
     - blessings==1.7
     - bqplot==0.12.32
     - cachetools==5.0.0
+    - cfgrib==0.9.10.0
     - colour==0.1.5
+    - dask==2022.2.1
     - dill==0.3.4
+    - distributed==2022.2.1
+    - docopt==0.6.2
     - earthengine-api==0.1.297
+    - eccodes==1.4.1
     - ee==0.2
     - ee-extra==0.0.10
+    - fasteners==0.17.3
     - ffmpeg-python==0.2.0
+    - filelock==3.6.0
+    - findlibs==0.0.2
     - future==0.18.2
+    - gdown==4.4.0
     - geeadd==0.5.5
-    - geemap==0.11.4
+    - geemap==0.11.7
     - geocoder==1.38.1
     - geojson==2.5.0
     - google-api-core==2.5.0
@@ -276,41 +297,60 @@ dependencies:
     - google-resumable-media==2.1.0
     - googleapis-common-protos==1.54.0
     - googledrivedownloader==0.4
+    - h5netcdf==0.14.1
+    - h5py==3.6.0
     - here-map-widget-for-jupyter==1.1.3
     - httplib2==0.20.4
     - httplib2shim==0.0.3
+    - imageio==2.16.1
     - ipyevents==2.0.1
     - ipyfilechooser==0.6.0
     - ipyleaflet==0.15.0
     - ipynb-py-convert==0.4.6
     - ipytree==0.2.1
     - jupyterlab-widgets==1.0.2
+    - llvmlite==0.38.0
+    - locket==0.2.1
     - logzero==1.7.0
+    - matplotlib==3.5.1
     - mss==6.1.0
+    - nc-time-axis==1.4.0
+    - numba==0.55.1
+    - numbagg==0.2.1
+    - numcodecs==0.9.1
+    - numpy==1.20.3
     - openturns==1.18
     - owslib==0.25.0
     - plotly==5.5.0
+    - plotly-calplot==0.1.7
+    - pooch==1.6.0
     - protobuf==3.19.4
-    - psutil==5.9.0
     - pyasn1==0.4.8
     - pyasn1-modules==0.2.8
     - pycrs==1.0.2
+    - pydap==3.2.2
     - pykrige==1.6.1
     - pyshp==2.2.0
     - python-box==5.4.1
-    - pyyaml==6.0
     - ratelim==0.1.6
+    - rioxarray==0.10.2
     - rsa==4.8
     - sankee==0.0.7
+    - scikit-gstat==1.0.1
+    - scipy==1.6.3
+    - shapely==1.7.1
     - sodapy==2.1.0
     - soupsieve==2.3.1
     - tenacity==8.0.1
     - tifffile==2022.2.9
+    - tqdm==4.61.0
     - traittypes==0.2.1
     - uritemplate==3.0.1
     - voila==0.3.1
     - watermark==2.3.0
+    - webob==1.8.7
     - websockets==10.1
     - whitebox==2.1.1
     - whiteboxgui==0.7.0
+    - zarr==2.11.1
 prefix: C:\Users\Administrator\anaconda3\envs\ddust
