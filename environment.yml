@@ -3,7 +3,6 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - geemap 
   - geopandas
   - numpy
   - pandas
@@ -11,14 +10,18 @@ dependencies:
   - requests
   - os
   - json
-  - scipy
   - ipywidgets
-  - sodapy
   - zipfile
   - datetime
-  - ee
   - rasterio
   - rasterstats
   - rioxarray
   - shapely
-
+  - pip:
+    - geemap 
+    - ee
+    - matplotlib
+    - plotly
+    - scipy
+    - sodapy
+    
