@@ -1,0 +1,24 @@
+name: ddust
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9.10
+  - geopandas=0.10.2
+  - geemap=0.11.7
+  - numpy=1.20.3
+  - pandas=1.4.0
+  - requests=2.27.1
+  - ipywidgets=7.6.5
+  - rasterio=1.2.10
+  - rasterstats=0.16.0
+  - rioxarray=0.10.2
+  - pip=22.0.3
+  - pip:
+    - ee
+    - matplotlib=3.5.1
+    - plotly=5.5.0
+    - shapely=1.7.1
+    - scipy=1.6.3
+    - sodapy=2.1.0
+    - cdsapi=0.5.1
+    
