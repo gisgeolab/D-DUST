@@ -2,6 +2,7 @@ name: ddust
 channels:
   - conda-forge
 dependencies:
+  - python
   - geopandas
   - geemap
   - numpy
