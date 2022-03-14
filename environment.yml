@@ -9,7 +9,6 @@ dependencies:
   - cdsapi
   - requests
   - ipywidgets
-  - zipfile
   - rasterio
   - rasterstats
   - rioxarray
@@ -24,4 +23,5 @@ dependencies:
     - os
     - json
     - datetime
+     - zipfile
     
