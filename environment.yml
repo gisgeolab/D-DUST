@@ -6,7 +6,6 @@ dependencies:
   - geopandas
   - numpy
   - pandas
-  - cdsapi
   - requests
   - ipywidgets
   - rasterio
@@ -20,8 +19,8 @@ dependencies:
     - plotly
     - scipy
     - sodapy
-    - os
     - json
     - datetime
-     - zipfile
+    - zipfile
+    - cdsapi
     
