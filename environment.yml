@@ -8,11 +8,8 @@ dependencies:
   - pandas
   - cdsapi
   - requests
-  - os
-  - json
   - ipywidgets
   - zipfile
-  - datetime
   - rasterio
   - rasterstats
   - rioxarray
@@ -24,4 +21,7 @@ dependencies:
     - plotly
     - scipy
     - sodapy
+    - os
+    - json
+    - datetime
     
