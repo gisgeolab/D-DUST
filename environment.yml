@@ -1,0 +1,24 @@
+name: ddust
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - geemap 
+  - geopandas
+  - numpy
+  - pandas
+  - cdsapi
+  - requests
+  - os
+  - json
+  - scipy
+  - ipywidgets
+  - sodapy
+  - zipfile
+  - datetime
+  - ee
+  - rasterio
+  - rasterstats
+  - rioxarray
+  - shapely
+
