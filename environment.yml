@@ -4,6 +4,7 @@ channels:
   - defaults
 dependencies:
   - geopandas
+  - geemap
   - numpy
   - pandas
   - requests
@@ -13,7 +14,6 @@ dependencies:
   - rioxarray
   - shapely
   - pip:
-    - geemap 
     - ee
     - matplotlib
     - plotly
