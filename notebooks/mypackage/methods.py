@@ -320,3 +320,20 @@ def mgwr(data, labels, coords, y):
 
     df_betas.to_csv(r'results/mgwr_betas.csv', index=False)
 
+def compute_mgwr_betas(df_betas, labels):
+    mean = df_betas.mean(axis=0)
+    median = df_betas.median(axis=0)
+
+    results = pd.DataFrame()
+    results['Labels'] = labels
+    results['Mean'] = mean.tolist()
+    results['Median'] = median.tolist()
+
+    return results
+
+
+def compute_mgwr_bw(df_bw, labels):
+    labels = labels.insert(0, 'intercept')
+    results = pd.DataFrame()
+    results['Labels'] = labels
+    results['Bandwidth'] = df_bw
