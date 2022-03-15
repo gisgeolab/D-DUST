@@ -1,12 +1,9 @@
-import warnings
 import scipy.stats
 import pandas as pd
-from mgwr.gwr import GWR, MGWR
+from mgwr.gwr import MGWR
 from mgwr.sel_bw import Sel_BW
 from numpy import arange, std
-from numpy.linalg import matrix_rank
 from scipy.stats import gmean
-import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import preprocessing
 from sklearn.datasets import make_classification
@@ -24,11 +21,25 @@ from sklearn.tree import DecisionTreeClassifier
 import plotly.graph_objects as go
 import warnings
 
-import plotly.express as px
-
-
 def NormalizeData(data):
-    return (data - np.min(data)) / (np.max(data) - np.min(data))
+    result = (data - np.min(data)) / (np.max(data) - np.min(data))
+    return result
+
+def NormalizeData1D(data):
+    data = np.array(data).reshape(-1, 1)
+    scaler = MinMaxScaler()
+    result = scaler.fit_transform(data).reshape((-1,))
+    return result
+
+def NormalizeData2D(data):
+    scaler = MinMaxScaler()
+    return scaler.fit_transform(data)
+
+def columnNotNull(array):
+    for i in array:
+        if(i==True):
+            return True
+    return False
 
 
 def barPlot_func_onedata(values, plot_name):
@@ -39,24 +50,28 @@ def barPlot_func_onedata(values, plot_name):
             y=values['Scores']
         ))
     fig.show()
-    print('ok')
 
 
     #fig = px.bar(values, y='Scores', x='Variables', text_auto='0.2f', title=plot_name)
     #fig.show()
 
-def histogram_func(values, plot_name):
-    return go.Bar(
-            x=values['Variables'],
-            y=values['Scores']
-        )
+def check_NotNull(df):
+    bool = df.isna()
+    labels = []
+    for (columnName, columnData) in bool.iteritems():
+        if not columnNotNull(columnData):
+            labels.append(columnName)
 
-def pearson(X, Y, labels):
+    return labels
+
+
+
+def pearson(X, Y, labels, normalized):
     pearson = []
     for (columnName, columnData) in X.iteritems():
         pearson.append(scipy.stats.pearsonr(columnData, Y)[0])
-
-    pearson = NormalizeData(pearson)
+    if(normalized):
+        pearson = NormalizeData1D(pearson)
 
     results = pd.DataFrame()
     results['Scores'] = pearson
@@ -67,12 +82,13 @@ def pearson(X, Y, labels):
     return results
 
 
-def spearmanr(X, Y, labels):
+def spearmanr(X, Y, labels, normalized):
     spearmanr = []
     for (columnName, columnData) in X.iteritems():
         spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
 
-    spearmanr = NormalizeData(spearmanr)
+    if (normalized):
+        spearmanr = NormalizeData1D(spearmanr)
 
     results = pd.DataFrame()
     results['Scores'] = spearmanr
@@ -82,12 +98,13 @@ def spearmanr(X, Y, labels):
     return results
 
 
-def kendall(X, Y, labels):
+def kendall(X, Y, labels, normalized):
     kendall = []
     for (columnName, columnData) in X.iteritems():
         kendall.append(scipy.stats.kendalltau(columnData, Y)[0])
 
-    kendall = NormalizeData(kendall)
+    if (normalized):
+        kendall = NormalizeData1D(kendall)
 
     results = pd.DataFrame()
     results['Scores'] = kendall
@@ -97,7 +114,7 @@ def kendall(X, Y, labels):
     return results
 
 
-def f_test(X, y, labels):
+def f_test(X, y, labels, normalized):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=1)
 
     # configure to select all features
@@ -110,14 +127,17 @@ def f_test(X, y, labels):
     fs.transform(X_test)
 
     results = pd.DataFrame()
-    results['Scores'] = NormalizeData(fs.scores_)
+    scores = fs.scores_
+    if (normalized):
+        scores = NormalizeData1D(scores)
+    results['Scores'] = scores
     results['Variables'] = labels
 
     barPlot_func_onedata(results, "Fisher’s Score")
     return results
 
 
-def chi2_test(X, y, labels):
+def chi2_test(X, y, labels, normalized):
     X = X.astype(int)
     y = y.astype(int)
 
@@ -133,7 +153,12 @@ def chi2_test(X, y, labels):
     fs.transform(X_test)
 
     results = pd.DataFrame()
-    results['Scores'] = NormalizeData(fs.scores_)
+
+    scores = fs.scores_
+    if(normalized):
+        scores = NormalizeData1D(scores)
+
+    results['Scores'] = scores
     results['Variables'] = labels
 
     barPlot_func_onedata(results,  "Chi-Square Score")
@@ -160,7 +185,7 @@ def compute_dispersion_ratio(X, labels):
     return results
 
 
-def variance_threshold(X_train, labels):
+def variance_threshold(X_train, labels, normalized):
     # define thresholds to check
     thresholds = arange(0.0, 0.55, 0.05)
     # apply transform with each threshold
@@ -168,7 +193,11 @@ def variance_threshold(X_train, labels):
     selector.fit_transform(X_train)
 
     results = pd.DataFrame()
-    results['Scores'] = NormalizeData(selector.variances_)
+
+    scores = selector.variances_
+    if(normalized):
+        scores = NormalizeData1D(selector.variances_)
+    results['Scores'] = scores
     results['Variables'] = labels
 
     barPlot_func_onedata(results, "Variance Threshold")
@@ -197,14 +226,17 @@ def exhaustive_feature_selection(X, y, labels):
         print(labels[i])
 
 
-def RF_importance(X, y, labels):
+def RF_importance(X, y, labels, normalized):
     # define the model
     model = RandomForestRegressor()
     # fit the model
     model.fit(X, y)
     # get importance
-    importance = NormalizeData(model.feature_importances_)
+    importance = model.feature_importances_
     results = pd.DataFrame()
+
+    if(normalized):
+        importance = NormalizeData1D(importance)
     results['Scores'] = importance
     results['Variables'] = labels
 
