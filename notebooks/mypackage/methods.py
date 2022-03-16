@@ -21,9 +21,11 @@ from sklearn.tree import DecisionTreeClassifier
 import plotly.graph_objects as go
 import warnings
 
+
 def NormalizeData(data):
     result = (data - np.min(data)) / (np.max(data) - np.min(data))
     return result
+
 
 def NormalizeData1D(data):
     data = np.array(data).reshape(-1, 1)
@@ -31,13 +33,15 @@ def NormalizeData1D(data):
     result = scaler.fit_transform(data).reshape((-1,))
     return result
 
+
 def NormalizeData2D(data):
     scaler = MinMaxScaler()
     return scaler.fit_transform(data)
 
+
 def columnNotNull(array):
     for i in array:
-        if(i==True):
+        if (i == True):
             return True
     return False
 
@@ -51,9 +55,9 @@ def barPlot_func_onedata(values, plot_name):
         ))
     fig.show()
 
+    # fig = px.bar(values, y='Scores', x='Variables', text_auto='0.2f', title=plot_name)
+    # fig.show()
 
-    #fig = px.bar(values, y='Scores', x='Variables', text_auto='0.2f', title=plot_name)
-    #fig.show()
 
 def check_NotNull(df):
     bool = df.isna()
@@ -65,12 +69,12 @@ def check_NotNull(df):
     return labels
 
 
-
-def pearson(X, Y, labels, normalized):
+def pearson(X, Y, normalized):
+    labels = list(X.columns)
     pearson = []
     for (columnName, columnData) in X.iteritems():
         pearson.append(scipy.stats.pearsonr(columnData, Y)[0])
-    if(normalized):
+    if (normalized):
         pearson = NormalizeData1D(pearson)
 
     results = pd.DataFrame()
@@ -82,7 +86,9 @@ def pearson(X, Y, labels, normalized):
     return results
 
 
-def spearmanr(X, Y, labels, normalized):
+def spearmanr(X, Y, normalized):
+    labels = list(X.columns)
+
     spearmanr = []
     for (columnName, columnData) in X.iteritems():
         spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
@@ -94,11 +100,13 @@ def spearmanr(X, Y, labels, normalized):
     results['Scores'] = spearmanr
     results['Variables'] = labels
 
-    barPlot_func_onedata(results , "Spearmanr Rho")
+    barPlot_func_onedata(results, "Spearmanr Rho")
     return results
 
 
-def kendall(X, Y, labels, normalized):
+def kendall(X, Y, normalized):
+    labels = list(X.columns)
+
     kendall = []
     for (columnName, columnData) in X.iteritems():
         kendall.append(scipy.stats.kendalltau(columnData, Y)[0])
@@ -114,7 +122,9 @@ def kendall(X, Y, labels, normalized):
     return results
 
 
-def f_test(X, y, labels, normalized):
+def f_test(X, y, normalized):
+    labels = list(X.columns)
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=1)
 
     # configure to select all features
@@ -137,7 +147,9 @@ def f_test(X, y, labels, normalized):
     return results
 
 
-def chi2_test(X, y, labels, normalized):
+def chi2_test(X, y, normalized):
+    labels = list(X.columns)
+
     X = X.astype(int)
     y = y.astype(int)
 
@@ -155,17 +167,19 @@ def chi2_test(X, y, labels, normalized):
     results = pd.DataFrame()
 
     scores = fs.scores_
-    if(normalized):
+    if (normalized):
         scores = NormalizeData1D(scores)
 
     results['Scores'] = scores
     results['Variables'] = labels
 
-    barPlot_func_onedata(results,  "Chi-Square Score")
+    barPlot_func_onedata(results, "Chi-Square Score")
     return results
 
 
-def compute_dispersion_ratio(X, labels):
+def compute_dispersion_ratio(X):
+    labels = list(X.columns)
+
     dispersion_ratio = []
 
     for i in range(len(X[0])):
@@ -180,12 +194,10 @@ def compute_dispersion_ratio(X, labels):
     for i in range(len(labels)):
         print(labels[i], ': ', dispersion_ratio[i])
 
-
-
     return results
 
 
-def variance_threshold(X_train, labels, normalized):
+def variance_threshold(X_train, normalized):
     # define thresholds to check
     thresholds = arange(0.0, 0.55, 0.05)
     # apply transform with each threshold
@@ -195,16 +207,18 @@ def variance_threshold(X_train, labels, normalized):
     results = pd.DataFrame()
 
     scores = selector.variances_
-    if(normalized):
+    if (normalized):
         scores = NormalizeData1D(selector.variances_)
     results['Scores'] = scores
-    results['Variables'] = labels
+    results['Variables'] = selector.feature_names_in_
 
     barPlot_func_onedata(results, "Variance Threshold")
     return results
 
 
-def exhaustive_feature_selection(X, y, labels):
+def exhaustive_feature_selection(X, y):
+    labels = list(X.columns)
+
     warnings.filterwarnings("ignore")
 
     X = X.to_numpy()
@@ -226,7 +240,9 @@ def exhaustive_feature_selection(X, y, labels):
         print(labels[i])
 
 
-def RF_importance(X, y, labels, normalized):
+def RF_importance(X, y, normalized):
+    labels = list(X.columns)
+
     # define the model
     model = RandomForestRegressor()
     # fit the model
@@ -235,7 +251,7 @@ def RF_importance(X, y, labels, normalized):
     importance = model.feature_importances_
     results = pd.DataFrame()
 
-    if(normalized):
+    if (normalized):
         importance = NormalizeData1D(importance)
     results['Scores'] = importance
     results['Variables'] = labels
@@ -257,7 +273,9 @@ def detect_n_feature_RFE(X, y):
     print('Accuracy: %.3f (%.3f)' % (statistics.mean(n_scores), std(n_scores)))
 
 
-def recursive_feature_selection(X, y, labels, select):
+def recursive_feature_selection(X, y, select):
+    labels = list(X.columns)
+
     warnings.filterwarnings("ignore")
     # define RFE
     rfe = RFE(estimator=DecisionTreeClassifier(), n_features_to_select=select)
@@ -265,13 +283,14 @@ def recursive_feature_selection(X, y, labels, select):
     rfe.fit(X, y)
     # summarize all features
 
-
     results = pd.DataFrame()
-    results['Variables']=labels
+    results['Variables'] = labels
     results['isSelected'] = rfe.support_
-    results['Ranking']=rfe.ranking_
+    results['Ranking'] = rfe.ranking_
 
     return results
+
+
 def get_models():
     models = dict()
     for i in range(2, 10):
@@ -288,22 +307,20 @@ def evaluate_model(model, X1, y1):
     return scores
 
 
-
 def mgwr(data, labels, coords, y):
     df = pd.DataFrame(data, columns=labels).dropna()
 
-
-    X = df.drop(['prim_road','sec_road','highway','farms'], axis=1)
-    labels =list(X.columns)
+    X = df.drop(['prim_road', 'sec_road', 'highway', 'farms'], axis=1)
+    labels = list(X.columns)
     X = X.to_numpy()
-  #  lat = pd.DataFrame(data, columns=['lat'])
-   # lat = lat['lat'].tolist()
+    #  lat = pd.DataFrame(data, columns=['lat'])
+    # lat = lat['lat'].tolist()
 
-  #  lon = pd.DataFrame(data, columns=['lon'])
-  #  lon = lon['lon'].tolist()
-  #  print(matrix_rank(X))
+    #  lon = pd.DataFrame(data, columns=['lon'])
+    #  lon = lon['lon'].tolist()
+    #  print(matrix_rank(X))
 
-    #coords = list(zip(lat, lon))
+    # coords = list(zip(lat, lon))
 
     X = (X - X.mean(axis=0)) / X.std(axis=0)
 
@@ -312,21 +329,17 @@ def mgwr(data, labels, coords, y):
     Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
     sel = Sel_BW(coords, Y, X)
 
-
     bw = sel.search()
     print('bw:', bw)
-
 
     selector = Sel_BW(coords, Y, X, multi=True, constant=True)
     bw = selector.search(multi_bw_min=[2])
 
     print("bw( intercept ):", bw[0])
 
-
     df_bw = pd.DataFrame(bw)
 
     df_bw.to_csv(r'results/mgwr_bw.csv', index=False)
-
 
     mgwr = MGWR(coords, Y, X, selector, constant=True)
     mgwr_results = mgwr.fit()
@@ -351,6 +364,7 @@ def mgwr(data, labels, coords, y):
     df_betas = pd.DataFrame(mgwr_results.params)
 
     df_betas.to_csv(r'results/mgwr_betas.csv', index=False)
+
 
 def compute_mgwr_betas(df_betas, labels):
     mean = df_betas.mean(axis=0)
