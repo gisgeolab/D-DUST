@@ -63,6 +63,7 @@ def AQ_sensor(year):
     Function for selecting the correct link for downloading zipper .csv air quality data from ARPA sensors
     """
     switcher = {
+        '2021': "https://www.dati.lombardia.it/download/wzmx-9k7n/application%2Fx-zip-compressed",
         '2020': "https://www.dati.lombardia.it/download/88sp-5tmj/application%2Fzip",
         '2019': "https://www.dati.lombardia.it/download/j2mz-aium/application%2Fzip",
         '2018': "https://www.dati.lombardia.it/download/4t9j-fd8z/application%2Fzip",
