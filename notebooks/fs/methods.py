@@ -294,7 +294,7 @@ def recursive_feature_selection(X, y, select):
     results['Variables'] = labels
     results['isSelected'] = rfe.support_
     results['Ranking'] = rfe.ranking_
-
+    print(results)
     return results
 
 
@@ -394,7 +394,11 @@ def compute_mgwr_bw(df_bw, labels):
 
 
 def noSensor_features(strings):
+
+    result = []
     for i in strings:
-        if i.find('_st') == -1:
-            strings.remove(i)
-    return strings
+        if ("_st" in i) == False:
+            if( ("_lcs" in i) == False):
+                result.append(i)
+
+    return result
