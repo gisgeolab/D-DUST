@@ -364,6 +364,7 @@ def mgwr(data, labels, coords, y):
     df_betas = pd.DataFrame(mgwr_results.params)
 
     df_betas.to_csv(r'results/mgwr_betas.csv', index=False)
+    mgwr_results.summary()
 
 
 def compute_mgwr_betas(df_betas, labels):
