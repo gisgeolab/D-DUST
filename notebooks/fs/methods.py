@@ -239,6 +239,13 @@ def exhaustive_feature_selection(X, y):
     for i in efs1.best_idx_:
         print(labels[i])
 
+    df = pd.DataFrame.from_dict(efs1.get_metric_dict()).T
+    df.sort_values('avg_score', inplace=True, ascending=False)
+    for i in efs1.best_idx_:
+        print(labels[i])
+
+    return df
+
 
 def RF_importance(X, y, normalized):
     labels = list(X.columns)
@@ -384,3 +391,10 @@ def compute_mgwr_bw(df_bw, labels):
     results = pd.DataFrame()
     results['Labels'] = labels
     results['Bandwidth'] = df_bw
+
+
+def noSensor_features(strings):
+    for i in strings:
+        if i.find('_st') == -1:
+            strings.remove(i)
+    return strings
