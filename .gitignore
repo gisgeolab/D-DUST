@@ -4,3 +4,4 @@ notebooks/.ipynb_checkpoints
 notebooks/.DS_Store
 .DS_Store
 notebooks/mypackage/__pycache__
+*.pyc
