@@ -402,3 +402,10 @@ def noSensor_features(strings):
                 result.append(i)
 
     return result
+
+def clean_dataset_nosensor(df, labels):
+    X = pd.DataFrame(df, columns=labels).dropna()
+    labels = check_NotNull(X)
+    X = pd.DataFrame(X, columns=labels)
+    X.pop('geometry')
+    return X
