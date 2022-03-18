@@ -409,3 +409,15 @@ def clean_dataset_nosensor(df, labels):
     X = pd.DataFrame(X, columns=labels)
     X.pop('geometry')
     return X
+
+def score_rfe(dataframe):
+    scores = []
+    for i in dataframe['Ranking']:
+        if(i == 1):
+            scores.append(1)
+        if(i == 2):
+            scores.append(0.5)
+        else:
+            scores.append(0)
+
+    return scores
