@@ -197,20 +197,25 @@ def compute_dispersion_ratio(X):
     return results
 
 
-def variance_threshold(X_train, normalized):
+def variance_threshold(X_train):
     # define thresholds to check
     thresholds = arange(0.0, 0.55, 0.05)
     # apply transform with each threshold
-    selector = VarianceThreshold(threshold=0)
+    selector = VarianceThreshold(threshold=0.1)
     selector.fit_transform(X_train)
 
     results = pd.DataFrame()
 
-    scores = selector.variances_
-    if (normalized):
-        scores = NormalizeData1D(selector.variances_)
-    results['Scores'] = scores
+    scores = []
+    for i in selector.get_support():
+        if i == False:
+            scores.append(1)
+        else:
+            scores.append(0)
+
+
     results['Variables'] = selector.feature_names_in_
+    results['Scores'] = scores
 
     barPlot_func_onedata(results, "Variance Threshold")
     return results
