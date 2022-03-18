@@ -7,9 +7,9 @@ def select_grid(grid):
     A function to select paths for grids
     """
     switcher = {
-        'cams': '/grid/grid0_1.gpkg',
-        's5p': '/grid/grid0_066.gpkg',
-        'arpa': '/grid/grid0_01.gpkg'
+        'cams': '/grid/grid_cams.gpkg',
+        's5p': '/grid/grid_s5p.gpkg',
+        'arpa': '/grid/grid_arpa.gpkg'
     }
     return switcher.get(grid, "Invalid grid")
 
