@@ -83,7 +83,7 @@ def pearson(X, Y, normalized):
 
     barPlot_func_onedata(results, "Pearson Index")
 
-    return results
+    return pearson
 
 
 def spearmanr(X, Y, normalized):
@@ -101,7 +101,7 @@ def spearmanr(X, Y, normalized):
     results['Variables'] = labels
 
     barPlot_func_onedata(results, "Spearmanr Rho")
-    return results
+    return spearmanr
 
 
 def kendall(X, Y, normalized):
@@ -119,7 +119,7 @@ def kendall(X, Y, normalized):
     results['Variables'] = labels
 
     barPlot_func_onedata(results, "Kendall Tau")
-    return results
+    return kendall
 
 
 def f_test(X, y, normalized):
@@ -144,7 +144,7 @@ def f_test(X, y, normalized):
     results['Variables'] = labels
 
     barPlot_func_onedata(results, "Fisher’s Score")
-    return results
+    return scores
 
 
 def chi2_test(X, y, normalized):
@@ -174,7 +174,7 @@ def chi2_test(X, y, normalized):
     results['Variables'] = labels
 
     barPlot_func_onedata(results, "Chi-Square Score")
-    return results
+    return scores
 
 
 def compute_dispersion_ratio(X):
@@ -194,7 +194,7 @@ def compute_dispersion_ratio(X):
     for i in range(len(labels)):
         print(labels[i], ': ', dispersion_ratio[i])
 
-    return results
+    return dispersion_ratio
 
 
 def variance_threshold(X_train):
@@ -218,7 +218,7 @@ def variance_threshold(X_train):
     results['Scores'] = scores
 
     barPlot_func_onedata(results, "Variance Threshold")
-    return results
+    return scores
 
 
 def exhaustive_feature_selection(X, y):
@@ -270,7 +270,7 @@ def RF_importance(X, y, normalized):
 
     # plot feature importance
     barPlot_func_onedata(results, "Random Forest Importance")
-    return results
+    return importance
 
 
 def detect_n_feature_RFE(X, y):
@@ -299,7 +299,6 @@ def recursive_feature_selection(X, y, select):
     results['Variables'] = labels
     results['isSelected'] = rfe.support_
     results['Ranking'] = rfe.ranking_
-    print(results)
     return results
 
 
