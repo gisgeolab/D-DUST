@@ -60,7 +60,7 @@ def manuring_periods(year, mais_w, rice_w, cereal_w):
 
 def AQ_sensor(year):
     """
-    Function for selecting the correct link for downloading zipper .csv air quality data from ARPA sensors
+    Function for selecting the correct link for downloading zipped .csv air quality data from ARPA sensors
     """
     switcher = {
         '2021': "https://www.dati.lombardia.it/download/wzmx-9k7n/application%2Fx-zip-compressed",
@@ -74,7 +74,7 @@ def AQ_sensor(year):
 
 def meteo_sensor(year):
     """
-    Function for selecting the correct link for downloading zipper .csv meteorological data from ARPA sensors
+    Function for selecting the correct link for downloading zipped .csv meteorological data from ARPA sensors
     """
     switcher = {
         '2021': "https://www.dati.lombardia.it/download/49n9-866s/application%2Fzip",
