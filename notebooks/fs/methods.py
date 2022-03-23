@@ -197,11 +197,11 @@ def compute_dispersion_ratio(X):
     return dispersion_ratio
 
 
-def variance_threshold(X_train):
+def variance_threshold(X_train, th):
     # define thresholds to check
     thresholds = arange(0.0, 0.55, 0.05)
     # apply transform with each threshold
-    selector = VarianceThreshold(threshold=0.1)
+    selector = VarianceThreshold(threshold=th)
     selector.fit_transform(X_train)
 
     results = pd.DataFrame()
