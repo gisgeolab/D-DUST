@@ -1,24 +1,29 @@
+from __future__ import print_function
+from ipywidgets import interact, interactive, fixed, interact_manual
+import ipywidgets as widgets
 import scipy.stats
 import pandas as pd
+from ipywidgets import widgets, interact
+from matplotlib.container import Container
 from mgwr.gwr import MGWR
 from mgwr.sel_bw import Sel_BW
-from numpy import arange, std
+from numpy import arange, std, log
 from scipy.stats import gmean
 import numpy as np
-from sklearn import preprocessing
+from IPython.display import display, clear_output
+from ipywidgets import widgets
 from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.feature_selection import SelectKBest, f_regression, f_classif, VarianceThreshold, RFE, RFECV
+from sklearn.feature_selection import SelectKBest, f_regression, VarianceThreshold, RFE, RFECV
 from sklearn.model_selection import train_test_split, RepeatedStratifiedKFold, cross_val_score
-from sklearn.feature_selection import chi2
 import statistics
 from sklearn.linear_model import LinearRegression
 from mlxtend.feature_selection import ExhaustiveFeatureSelector as EFS
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
 import plotly.graph_objects as go
+import plotly.express as px
 import warnings
 
 
@@ -47,17 +52,39 @@ def columnNotNull(array):
 
 
 def barPlot_func_onedata(values, plot_name):
-    fig = go.Figure()
-    fig.add_trace(
-        go.Bar(
-            x=values['Variables'],
-            y=values['Scores']
-        ))
-    fig.show()
 
-    # fig = px.bar(values, y='Scores', x='Variables', text_auto='0.2f', title=plot_name)
-    # fig.show()
+    def barPlot_manager(change_scale, change_order):
+        fig = go.Figure()
+        if (change_scale == 'Logaritmic'):
+            if(change_order=='Scores'):
+                df = values.sort_values(by='Scores', ascending=False)
+                trace = go.Bar(x=df['Variables'], y=np.log(df['Scores']))
+            else:
+                trace = go.Bar(x=values['Variables'], y=np.log(values['Scores']))
+        else:
+            if(change_order == 'Scores'):
+                df = values.sort_values(by = 'Scores',  ascending=False)
+                trace = go.Bar(x=df['Variables'], y=df['Scores'])
+            else:
+                trace = go.Bar(x=values['Variables'], y=values['Scores'])
 
+        fig.add_trace(trace)
+        fig.show()
+        container = widgets.Box([scale, order])
+        display(container)
+
+    scale = widgets.RadioButtons(
+        options=['Regular', 'Logaritmic'],
+        description='Score scales:',
+        disabled=False,
+    )
+    order = widgets.RadioButtons(
+        options=['Labels', 'Scores'],
+        description='Order by:',
+        disabled=False
+    )
+
+    interact(barPlot_manager, change_scale = scale, change_order = order)
 
 def check_NotNull(df):
     bool = df.isna()
@@ -212,7 +239,6 @@ def variance_threshold(X_train, th):
             scores.append(1)
         else:
             scores.append(0)
-
 
     results['Variables'] = selector.feature_names_in_
     results['Scores'] = scores
@@ -398,14 +424,14 @@ def compute_mgwr_bw(df_bw, labels):
 
 
 def noSensor_features(strings):
-
     result = []
     for i in strings:
         if ("_st" in i) == False:
-            if( ("_lcs" in i) == False):
+            if (("_lcs" in i) == False):
                 result.append(i)
 
     return result
+
 
 def clean_dataset_nosensor(df, labels):
     X = pd.DataFrame(df, columns=labels).dropna()
@@ -414,14 +440,24 @@ def clean_dataset_nosensor(df, labels):
     X.pop('geometry')
     return X
 
+
 def score_rfe(dataframe):
     scores = []
     for i in dataframe['Ranking']:
-        if(i == 1):
+        if (i == 1):
             scores.append(1)
-        if(i == 2):
+        if (i == 2):
             scores.append(0.5)
         else:
             scores.append(0)
 
     return scores
+
+
+def scale_change():
+    clear_output(wait=True)
+    print(scale.value)
+
+
+def order_change():
+    print(order.value)
