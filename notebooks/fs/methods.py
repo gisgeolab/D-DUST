@@ -72,7 +72,7 @@ def barPlot_func_onedata(values, plot_name):
         fig.show()
         container = widgets.Box([scale, order])
         display(container)
-
+        return
     scale = widgets.RadioButtons(
         options=['Regular', 'Logaritmic'],
         description='Score scales:',
