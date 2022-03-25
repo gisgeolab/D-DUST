@@ -1,5 +1,5 @@
 from __future__ import print_function
-from ipywidgets import interact, interactive, fixed, interact_manual
+from ipywidgets import interact, interactive, fixed, interact_manual, VBox
 import ipywidgets as widgets
 import scipy.stats
 import pandas as pd
@@ -50,29 +50,14 @@ def columnNotNull(array):
             return True
     return False
 
+def show_bar(labels, scores, name):
+    df = pd.DataFrame(list(zip(labels, scores)), columns=['Variables', 'Scores'])
+    fig = px.bar(df, x="Variables", y="Scores", color="Scores")
+    fig.update_layout(title_text=name)
+    fig.show()
+
 
 def barPlot_func_onedata(values, plot_name):
-
-    def barPlot_manager(change_scale, change_order):
-        fig = go.Figure()
-        if (change_scale == 'Logaritmic'):
-            if(change_order=='Scores'):
-                df = values.sort_values(by='Scores', ascending=False)
-                trace = go.Bar(x=df['Variables'], y=np.log(df['Scores']))
-            else:
-                trace = go.Bar(x=values['Variables'], y=np.log(values['Scores']))
-        else:
-            if(change_order == 'Scores'):
-                df = values.sort_values(by = 'Scores',  ascending=False)
-                trace = go.Bar(x=df['Variables'], y=df['Scores'])
-            else:
-                trace = go.Bar(x=values['Variables'], y=values['Scores'])
-
-        fig.add_trace(trace)
-        fig.show()
-        container = widgets.Box([scale, order])
-        display(container)
-        return
     scale = widgets.RadioButtons(
         options=['Regular', 'Logaritmic'],
         description='Score scales:',
@@ -84,7 +69,25 @@ def barPlot_func_onedata(values, plot_name):
         disabled=False
     )
 
-    interact(barPlot_manager, change_scale = scale, change_order = order)
+    def barPlot_manager(change_scale, change_order):
+        if (change_scale == 'Logaritmic'):
+            if(change_order=='Scores'):
+                df = values.sort_values(by='Scores', ascending=False)
+                show_bar(df['Variables'], np.log(df['Scores']), plot_name)
+                return
+            else:
+                show_bar(values['Variables'], np.log(values['Scores']), plot_name)
+                return
+        else:
+            if(change_order == 'Scores'):
+                df = values.sort_values(by = 'Scores',  ascending=False)
+                show_bar(df['Variables'], df['Scores'], plot_name)
+                return
+            else:
+                show_bar(values['Variables'], values['Scores'], plot_name)
+                return
+
+    display(interactive(barPlot_manager, change_scale = scale, change_order = order))
 
 def check_NotNull(df):
     bool = df.isna()
