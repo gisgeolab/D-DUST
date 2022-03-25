@@ -87,7 +87,10 @@ def barPlot_func_onedata(values, plot_name):
                 show_bar(values['Variables'], values['Scores'], plot_name)
                 return
 
-    display(interactive(barPlot_manager, change_scale = scale, change_order = order))
+    ui = widgets.HBox([scale, order])
+    out = widgets.interactive_output(barPlot_manager, {'change_scale': scale, 'change_order': order})
+    display(ui, out)
+
 
 def check_NotNull(df):
     bool = df.isna()
