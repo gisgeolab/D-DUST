@@ -51,8 +51,8 @@ def columnNotNull(array):
     return False
 
 def show_bar(labels, scores, name):
-    df = pd.DataFrame(list(zip(labels, scores)), columns=['Variables', 'Scores'])
-    fig = px.bar(df, x="Variables", y="Scores", color="Scores")
+    df = pd.DataFrame(list(zip(labels, scores)), columns=['Features', 'Scores'])
+    fig = px.bar(df, x="Features", y="Scores", color="Scores")
     fig.update_layout(title_text=name)
     fig.show()
 
@@ -73,18 +73,18 @@ def barPlot_func_onedata(values, plot_name):
         if (change_scale == 'Logaritmic'):
             if(change_order=='Scores'):
                 df = values.sort_values(by='Scores', ascending=False)
-                show_bar(df['Variables'], np.log(df['Scores']), plot_name)
+                show_bar(df['Features'], np.log(df['Scores']), plot_name)
                 return
             else:
-                show_bar(values['Variables'], np.log(values['Scores']), plot_name)
+                show_bar(values['Features'], np.log(values['Scores']), plot_name)
                 return
         else:
             if(change_order == 'Scores'):
                 df = values.sort_values(by = 'Scores',  ascending=False)
-                show_bar(df['Variables'], df['Scores'], plot_name)
+                show_bar(df['Features'], df['Scores'], plot_name)
                 return
             else:
-                show_bar(values['Variables'], values['Scores'], plot_name)
+                show_bar(values['Features'], values['Scores'], plot_name)
                 return
 
     ui = widgets.HBox([scale, order])
@@ -112,7 +112,7 @@ def pearson(X, Y, normalized):
 
     results = pd.DataFrame()
     results['Scores'] = pearson
-    results['Variables'] = labels
+    results['Features'] = labels
 
     barPlot_func_onedata(results, "Pearson Index")
 
@@ -131,7 +131,7 @@ def spearmanr(X, Y, normalized):
 
     results = pd.DataFrame()
     results['Scores'] = spearmanr
-    results['Variables'] = labels
+    results['Features'] = labels
 
     barPlot_func_onedata(results, "Spearmanr Rho")
     return spearmanr
@@ -149,7 +149,7 @@ def kendall(X, Y, normalized):
 
     results = pd.DataFrame()
     results['Scores'] = kendall
-    results['Variables'] = labels
+    results['Features'] = labels
 
     barPlot_func_onedata(results, "Kendall Tau")
     return kendall
@@ -174,7 +174,7 @@ def f_test(X, y, normalized):
     if (normalized):
         scores = NormalizeData1D(scores)
     results['Scores'] = scores
-    results['Variables'] = labels
+    results['Features'] = labels
 
     barPlot_func_onedata(results, "Fisher’s Score")
     return scores
@@ -204,7 +204,7 @@ def chi2_test(X, y, normalized):
         scores = NormalizeData1D(scores)
 
     results['Scores'] = scores
-    results['Variables'] = labels
+    results['Features'] = labels
 
     barPlot_func_onedata(results, "Chi-Square Score")
     return scores
@@ -220,7 +220,7 @@ def compute_dispersion_ratio(X):
 
     results = pd.DataFrame()
     results['Scores'] = dispersion_ratio
-    results['Variables'] = labels
+    results['Features'] = labels
 
     barPlot_func_onedata(dispersion_ratio, 'Dispersion Ratio for each variable')
 
@@ -246,7 +246,7 @@ def variance_threshold(X_train, th):
         else:
             scores.append(0)
 
-    results['Variables'] = selector.feature_names_in_
+    results['Features'] = selector.feature_names_in_
     results['Scores'] = scores
 
     barPlot_func_onedata(results, "Variance Threshold")
@@ -298,7 +298,7 @@ def RF_importance(X, y, normalized):
     if (normalized):
         importance = NormalizeData1D(importance)
     results['Scores'] = importance
-    results['Variables'] = labels
+    results['Features'] = labels
 
     # plot feature importance
     barPlot_func_onedata(results, "Random Forest Importance")
@@ -328,7 +328,7 @@ def recursive_feature_selection(X, y, select):
     # summarize all features
 
     results = pd.DataFrame()
-    results['Variables'] = labels
+    results['Features'] = labels
     results['isSelected'] = rfe.support_
     results['Ranking'] = rfe.ranking_
     return results
