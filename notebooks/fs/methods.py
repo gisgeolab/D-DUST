@@ -57,6 +57,13 @@ def show_bar(labels, scores, name):
     fig.show()
 
 
+def show_bar_log(labels, scores, name):
+    df = pd.DataFrame(list(zip(labels, scores)), columns=['Features', 'Scores'])
+    fig = px.bar(df, x="Features", y="Scores", color="Scores", log_y=True)
+    fig.update_layout(title_text=name)
+    fig.show()
+
+
 def barPlot_func_onedata(values, plot_name):
     scale = widgets.RadioButtons(
         options=['Regular', 'Logaritmic'],
@@ -73,10 +80,10 @@ def barPlot_func_onedata(values, plot_name):
         if (change_scale == 'Logaritmic'):
             if(change_order=='Scores'):
                 df = values.sort_values(by='Scores', ascending=False)
-                show_bar(df['Features'], np.log(df['Scores']), plot_name)
+                show_bar_log(df['Features'], df['Scores'], plot_name)
                 return
             else:
-                show_bar(values['Features'], np.log(values['Scores']), plot_name)
+                show_bar_log(values['Features'], values['Scores'], plot_name)
                 return
         else:
             if(change_order == 'Scores'):
