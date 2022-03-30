@@ -50,6 +50,7 @@ def columnNotNull(array):
             return True
     return False
 
+
 def show_bar(labels, scores, name):
     df = pd.DataFrame(list(zip(labels, scores)), columns=['Features', 'Scores'])
     fig = px.bar(df, x="Features", y="Scores", color="Scores")
@@ -70,32 +71,54 @@ def barPlot_func_onedata(values, plot_name):
         description='Score scales:',
         disabled=False,
     )
+
     order = widgets.RadioButtons(
         options=['Labels', 'Scores'],
         description='Order by:',
         disabled=False
     )
 
-    def barPlot_manager(change_scale, change_order):
+    norm = widgets.Checkbox(
+        value=True,
+        description='Results normalized',
+        disabled=False,
+        indent=True
+    )
+
+    def barPlot_manager(change_scale, change_order, normalized):
+        df = pd.DataFrame(data=values)
         if (change_scale == 'Logaritmic'):
-            if(change_order=='Scores'):
-                df = values.sort_values(by='Scores', ascending=False)
-                show_bar_log(df['Features'], df['Scores'], plot_name)
+            if (change_order == 'Scores'):
+                df = df.sort_values(by='Scores', ascending=False)
+                if normalized:
+                    show_bar_log(df['Features'], NormalizeData1D(df['Scores']), plot_name)
+                else:
+                    show_bar_log(df['Features'], df['Scores'], plot_name)
                 return
             else:
-                show_bar_log(values['Features'], values['Scores'], plot_name)
-                return
+                if normalized:
+                    show_bar_log(df['Features'], NormalizeData1D(df['Scores']), plot_name)
+                else:
+                    show_bar_log(df['Features'], df['Scores'], plot_name)
+                    return
         else:
-            if(change_order == 'Scores'):
-                df = values.sort_values(by = 'Scores',  ascending=False)
-                show_bar(df['Features'], df['Scores'], plot_name)
-                return
+            if (change_order == 'Scores'):
+                df = df.sort_values(by='Scores', ascending=False)
+                if normalized:
+                    show_bar(df['Features'], NormalizeData1D(df['Scores']), plot_name)
+                else:
+                    show_bar(df['Features'], df['Scores'], plot_name)
+                    return
             else:
-                show_bar(values['Features'], values['Scores'], plot_name)
+                if normalized:
+                    show_bar(df['Features'], NormalizeData1D(df['Scores']), plot_name)
+                else:
+                    show_bar(df['Features'], df['Scores'], plot_name)
                 return
 
-    ui = widgets.HBox([scale, order])
-    out = widgets.interactive_output(barPlot_manager, {'change_scale': scale, 'change_order': order})
+    ui = widgets.HBox([norm, scale, order])
+    out = widgets.interactive_output(barPlot_manager,
+                                     {'change_scale': scale, 'change_order': order, 'normalized': norm})
     display(ui, out)
 
 
@@ -109,15 +132,11 @@ def check_NotNull(df):
     return labels
 
 
-
-
-def pearson(X, Y, normalized):
+def pearson(X, Y):
     labels = list(X.columns)
     pearson = []
     for (columnName, columnData) in X.iteritems():
         pearson.append(scipy.stats.pearsonr(columnData, Y)[0])
-    if (normalized):
-        pearson = NormalizeData1D(pearson)
 
     results = pd.DataFrame()
     results['Scores'] = pearson
@@ -128,15 +147,12 @@ def pearson(X, Y, normalized):
     return pearson
 
 
-def spearmanr(X, Y, normalized):
+def spearmanr(X, Y):
     labels = list(X.columns)
 
     spearmanr = []
     for (columnName, columnData) in X.iteritems():
         spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
-
-    if (normalized):
-        spearmanr = NormalizeData1D(spearmanr)
 
     results = pd.DataFrame()
     results['Scores'] = spearmanr
@@ -146,15 +162,12 @@ def spearmanr(X, Y, normalized):
     return spearmanr
 
 
-def kendall(X, Y, normalized):
+def kendall(X, Y):
     labels = list(X.columns)
 
     kendall = []
     for (columnName, columnData) in X.iteritems():
         kendall.append(scipy.stats.kendalltau(columnData, Y)[0])
-
-    if (normalized):
-        kendall = NormalizeData1D(kendall)
 
     results = pd.DataFrame()
     results['Scores'] = kendall
@@ -164,7 +177,7 @@ def kendall(X, Y, normalized):
     return kendall
 
 
-def f_test(X, y, normalized):
+def f_test(X, y):
     labels = list(X.columns)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=1)
@@ -180,8 +193,6 @@ def f_test(X, y, normalized):
 
     results = pd.DataFrame()
     scores = fs.scores_
-    if (normalized):
-        scores = NormalizeData1D(scores)
     results['Scores'] = scores
     results['Features'] = labels
 
@@ -189,7 +200,7 @@ def f_test(X, y, normalized):
     return scores
 
 
-def chi2_test(X, y, normalized):
+def chi2_test(X, y):
     labels = list(X.columns)
 
     X = X.astype(int)
@@ -209,9 +220,6 @@ def chi2_test(X, y, normalized):
     results = pd.DataFrame()
 
     scores = fs.scores_
-    if (normalized):
-        scores = NormalizeData1D(scores)
-
     results['Scores'] = scores
     results['Features'] = labels
 
@@ -293,7 +301,7 @@ def exhaustive_feature_selection(X, y):
     return df
 
 
-def RF_importance(X, y, normalized):
+def RF_importance(X, y):
     labels = list(X.columns)
 
     # define the model
@@ -304,8 +312,6 @@ def RF_importance(X, y, normalized):
     importance = model.feature_importances_
     results = pd.DataFrame()
 
-    if (normalized):
-        importance = NormalizeData1D(importance)
     results['Scores'] = importance
     results['Features'] = labels
 
@@ -468,11 +474,3 @@ def score_rfe(dataframe):
 
     return scores
 
-
-def scale_change():
-    clear_output(wait=True)
-    print(scale.value)
-
-
-def order_change():
-    print(order.value)
