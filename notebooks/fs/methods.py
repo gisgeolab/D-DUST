@@ -68,7 +68,7 @@ def show_bar_log(labels, scores, name):
 def barPlot_func_onedata(values, plot_name):
     scale = widgets.RadioButtons(
         options=['Regular', 'Logaritmic'],
-        description='Score scales:',
+        description='Scale:',
         disabled=False,
     )
 
