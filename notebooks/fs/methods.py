@@ -365,20 +365,26 @@ def evaluate_model(model, X1, y1):
     return scores
 
 
-def mgwr(data, labels, coords, y):
-    df = pd.DataFrame(data, columns=labels).dropna()
+def mgwr(data, labels, coords, target):
+    temp = pd.DataFrame(data).dropna(axis=1)
+    temp.drop(temp.tail(200).index,
+           inplace=True)
+    coords = list(zip(temp['lat_cen'], temp['lng_cen']))
 
-    X = df.drop(['prim_road', 'sec_road', 'highway', 'farms'], axis=1)
-    labels = list(X.columns)
-    X = X.to_numpy()
-    #  lat = pd.DataFrame(data, columns=['lat'])
-    # lat = lat['lat'].tolist()
+    y = temp[target]
 
-    #  lon = pd.DataFrame(data, columns=['lon'])
-    #  lon = lon['lon'].tolist()
-    #  print(matrix_rank(X))
+    df = pd.DataFrame(temp)
 
-    # coords = list(zip(lat, lon))
+    y = y.values.ravel()
+
+    df = df.iloc[:, :-80]
+
+
+
+    # X = df.drop(['prim_road', 'sec_road', 'highway', 'farms'], axis=1)
+    #labels = list(X.columns)
+    labels = list(df.columns)
+    X = df.to_numpy()
 
     X = (X - X.mean(axis=0)) / X.std(axis=0)
 
@@ -424,6 +430,13 @@ def mgwr(data, labels, coords, y):
     df_betas.to_csv(r'results/mgwr_betas.csv', index=False)
     mgwr_results.summary()
 
+    fig = go.Figure(data=[
+        go.Bar(name='Mean', x=labels, y=df_betas.mean(axis=1)),
+        go.Bar(name='Median', x=labels, y=df_betas.median(axis=1))
+    ])
+    # Change the bar mode
+    fig.update_layout(barmode='group')
+    fig.show()
 
 def compute_mgwr_betas(df_betas, labels):
     mean = df_betas.mean(axis=0)
