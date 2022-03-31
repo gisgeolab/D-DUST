@@ -10,7 +10,8 @@ dependencies:
   - mlxtend
   - scikit-learn
   - pip
-  -scipy
+  - scipy
+  - warning
   - pip:
     - plotly
     - scipy
