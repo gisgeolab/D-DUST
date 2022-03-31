@@ -1,0 +1,16 @@
+name: example-environment
+  - conda-forge
+dependencies:
+  - python
+  - geopandas
+  - numpy
+  - pandas
+  - ipywidgets
+  - mgwr
+  - mlxtend
+  - scikit-learn
+  - pip
+  - pip:
+    - matplotlib
+    - plotly
+    - scipy
