@@ -1,5 +1,10 @@
 from __future__ import print_function
+
+import time
+from timeit import timeit
+
 from ipywidgets import interact, interactive, fixed, interact_manual, VBox
+import multiprocessing as mp
 import ipywidgets as widgets
 import scipy.stats
 import pandas as pd
@@ -26,19 +31,19 @@ import plotly.graph_objects as go
 import plotly.express as px
 import warnings
 
-
+#Not used
 def NormalizeData(data):
     result = (data - np.min(data)) / (np.max(data) - np.min(data))
     return result
 
-
+#It normalized 1D array with MinMaxscaler
 def NormalizeData1D(data):
     data = np.array(data).reshape(-1, 1)
     scaler = MinMaxScaler()
     result = scaler.fit_transform(data).reshape((-1,))
     return result
 
-
+#Not used
 def NormalizeData2D(data):
     scaler = MinMaxScaler()
     return scaler.fit_transform(data)
@@ -122,6 +127,7 @@ def barPlot_func_onedata(values, plot_name):
     display(ui, out)
 
 
+#method which returns labels of features which have no nan values
 def check_NotNull(df):
     bool = df.isna()
     labels = []
@@ -364,12 +370,46 @@ def evaluate_model(model, X1, y1):
     scores = cross_val_score(model, X, y, scoring='accuracy', cv=3, n_jobs=-1)
     return scores
 
-
-def mgwr(data, labels, coords, target):
+#Method used to process data before the use of FastGWR. It returns a Dataframe of the params as mentioned in https://github.com/Ziqi-Li/FastGWR
+def mgwr_param(data, target):
+    warnings.filterwarnings("ignore")
     temp = pd.DataFrame(data).dropna(axis=1)
-    temp.drop(temp.tail(200).index,
-           inplace=True)
-    coords = list(zip(temp['lat_cen'], temp['lng_cen']))
+    #Used to decrease the sample size
+    #temp.drop(temp.tail(200).index, inplace=True)
+    temp.drop(temp.tail(100).index, inplace=True)
+    y = temp[target]
+
+    df = pd.DataFrame(temp)
+
+    y = y.values.ravel()
+
+    df.pop('bottom')
+    df.pop('top')
+    df.pop('geometry')
+    df.pop('left')
+    df.pop('right')
+    df = df.iloc[:, :-70]
+
+
+    X = df.to_numpy()
+    X = (X - X.mean(axis=0)) / X.std(axis=0)
+    Y = y.reshape((-1, 1))
+    Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
+    csv = pd.DataFrame()
+    csv['X'] = temp['lat_cen']
+    csv['Y'] = temp['lng_cen']
+    csv['target'] = temp[target]
+    csv = pd.concat([csv, pd.DataFrame(X)], axis=1)
+    csv.to_csv(r'results/params.csv', index=False)
+
+     
+
+
+def mgwr(data, target):
+    warnings.filterwarnings("ignore")
+    temp = pd.DataFrame(data).dropna(axis=1)
+#    temp.drop(temp.tail(200).index,
+#           inplace=True)
 
     y = temp[target]
 
@@ -377,67 +417,60 @@ def mgwr(data, labels, coords, target):
 
     y = y.values.ravel()
 
-    df = df.iloc[:, :-80]
 
-
-
+    df.pop('bottom')
+    df.pop('top')
+    df.pop('geometry')
+    df.pop('left')
+    df.pop('right')
     # X = df.drop(['prim_road', 'sec_road', 'highway', 'farms'], axis=1)
     #labels = list(X.columns)
     labels = list(df.columns)
+    coords = list(zip(temp['lat_cen'], temp['lng_cen']))
+
     X = df.to_numpy()
 
     X = (X - X.mean(axis=0)) / X.std(axis=0)
 
     Y = y.reshape((-1, 1))
-
     Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
-    sel = Sel_BW(coords, Y, X)
 
-    bw = sel.search()
-    print('bw:', bw)
+    sel = Sel_BW(coords, Y, X, multi=True, kernel='gaussian', spherical=True, fixed=True)
 
-    selector = Sel_BW(coords, Y, X, multi=True, constant=True)
-    bw = selector.search(multi_bw_min=[2])
+    n_proc = 2
+    pool = mp.Pool(n_proc)
+    print('ok')
+    #bw = sel.search(pool=pool)
+    #print('bw:', bw)
 
-    print("bw( intercept ):", bw[0])
+    bw = sel.search(pool=pool)
+
+    print('bw(intercept):', bw[0])
+
+    mgwr = MGWR(coords, Y, X, selector=sel, spherical=True, kernel='gaussian', fixed=True)
+    mgwr_results = mgwr.fit(pool=pool)
 
     df_bw = pd.DataFrame(bw)
-
-    df_bw.to_csv(r'results/mgwr_bw.csv', index=False)
-
-    mgwr = MGWR(coords, Y, X, selector, constant=True)
-    mgwr_results = mgwr.fit()
-
-    print('aicc:', mgwr_results.aicc)
-    print('sigma2:', mgwr_results.sigma2)
-    print('ENP(model):', mgwr_results.ENP)
-    print('adj_alpha(model):', mgwr_results.adj_alpha[1])
-    print('critical_t(model):', mgwr_results.critical_tval(alpha=mgwr_results.adj_alpha[1]))
-    alphas = mgwr_results.adj_alpha_j[:, 1]
-    critical_ts = mgwr_results.critical_tval()
-    print('\n')
-    print('ENP(intercept):', mgwr_results.ENP_j[0])
-    print('adj_alpha(intercept):', alphas[0])
-    print('critical_t(intercept):', critical_ts[0])
-    print('\n')
-    for i in range(len(labels)):
-        print("ENP(", labels[i], '): ', mgwr_results.ENP_j[i + 1])
-        print("adj_alpha(", labels[i], '): ', alphas[i + 1])
-        print("critical_t(", labels[i], '): ', critical_ts[i + 1])
-
     df_betas = pd.DataFrame(mgwr_results.params)
-
+    df_bw.to_csv(r'results/mgwr_bw.csv', index=False)
     df_betas.to_csv(r'results/mgwr_betas.csv', index=False)
+
+
     mgwr_results.summary()
 
     fig = go.Figure(data=[
         go.Bar(name='Mean', x=labels, y=df_betas.mean(axis=1)),
-        go.Bar(name='Median', x=labels, y=df_betas.median(axis=1))
+        go.Bar(name='Median', x=labels, y=df_betas.median(axis=1)),
+        go.Bar(name='Bandwidth', x=labels, y=df_bw)
     ])
     # Change the bar mode
     fig.update_layout(barmode='group')
     fig.show()
 
+    pool.close()  # Close the pool when you finish
+    pool.join()
+
+#Not used
 def compute_mgwr_betas(df_betas, labels):
     mean = df_betas.mean(axis=0)
     median = df_betas.median(axis=0)
@@ -449,14 +482,14 @@ def compute_mgwr_betas(df_betas, labels):
 
     return results
 
-
+#Not used
 def compute_mgwr_bw(df_bw, labels):
     labels = labels.insert(0, 'intercept')
     results = pd.DataFrame()
     results['Labels'] = labels
     results['Bandwidth'] = df_bw
 
-
+#exclude all features with '_st' and '_lcs' in the name
 def noSensor_features(strings):
     result = []
     for i in strings:
@@ -467,6 +500,7 @@ def noSensor_features(strings):
     return result
 
 
+#Not used
 def clean_dataset_nosensor(df, labels):
     X = pd.DataFrame(df, columns=labels).dropna()
     labels = check_NotNull(X)
@@ -474,7 +508,7 @@ def clean_dataset_nosensor(df, labels):
     X.pop('geometry')
     return X
 
-
+#Not used
 def score_rfe(dataframe):
     scores = []
     for i in dataframe['Ranking']:
