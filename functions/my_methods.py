@@ -14,7 +14,7 @@ def select_grid(grid):
     return switcher.get(grid, "Invalid grid")
 
 
-def manuring_periods(year, mais_w, rice_w, cereal_w):
+def manuring_periods(year, mais_w, rice_w, cereal_w, custom_w):
     """
     This function returns a dictionary where each key corresponds
     to the week number in a given year.
@@ -34,6 +34,7 @@ def manuring_periods(year, mais_w, rice_w, cereal_w):
     mais_week = mais_w
     rice_week = rice_w
     cereal_week = cereal_w
+    custom_week = custom_w
     all_dates = []
     while date < enddate:
         weeks[date.isocalendar()[1]]
@@ -45,6 +46,9 @@ def manuring_periods(year, mais_w, rice_w, cereal_w):
             weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d"))
             all_dates.append(date.strftime("%Y-%m-%d"))
         elif date.isocalendar()[1] in cereal_week:
+            weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d")) 
+            all_dates.append(date.strftime("%Y-%m-%d"))
+        elif date.isocalendar()[1] in custom_week:
             weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d")) 
             all_dates.append(date.strftime("%Y-%m-%d"))
     dictionary = dict(weeks)
