@@ -1,7 +1,7 @@
 {
 	"year": 2021,
-	"mais_week": [9,10],
-	"rice_week": [14,15],
-	"cereal_week": [42],
-	"custom_week": [25]
+	"mais_week": ["03-10", "03-17"],
+	"rice_week": ["04-10", "04-17"],
+	"cereal_week": ["10-10", "10-17"],
+	"custom_week": ["06-10", "06-17"]
 }

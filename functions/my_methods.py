@@ -17,10 +17,11 @@ def select_grid(grid):
 def manuring_periods(year, mais_w, rice_w, cereal_w, custom_w):
     """
     This function returns a dictionary where each key corresponds
-    to the week number in a given year.
+    time range selected for the processing for each menuring period.
     The corresponding value is empty if there is no manuring in that week,
     while a list of days if there is manuring during that week is returned.
-    It's required to pass the weeks corresponding to mais, rice and cereal manuring.
+    It's required to pass the weeks corresponding to mais, rice and cereal manuring. 
+    A custom week is added if other time ranges are required
     """
 
     import datetime
@@ -31,25 +32,24 @@ def manuring_periods(year, mais_w, rice_w, cereal_w, custom_w):
     date = datetime.date(year, 1, 1)
     enddate = datetime.date(year, 12, 31)
     weeks = defaultdict(list)
-    mais_week = mais_w
-    rice_week = rice_w
-    cereal_week = cereal_w
-    custom_week = custom_w
+    mais_week_start = datetime.datetime.strptime((str(year)+'-'+mais_w[0]), "%Y-%m-%d").date()
+    mais_week_end = datetime.datetime.strptime((str(year)+'-'+mais_w[1]), "%Y-%m-%d").date()
+    rice_week_start = datetime.datetime.strptime((str(year)+'-'+rice_w[0]), "%Y-%m-%d").date()
+    rice_week_end = datetime.datetime.strptime((str(year)+'-'+rice_w[1]), "%Y-%m-%d").date()
+    cereal_week_start = datetime.datetime.strptime((str(year)+'-'+cereal_w[0]), "%Y-%m-%d").date()
+    cereal_week_end = datetime.datetime.strptime((str(year)+'-'+cereal_w[1]), "%Y-%m-%d").date()
+    custom_week_start = datetime.datetime.strptime((str(year)+'-'+custom_w[0]), "%Y-%m-%d").date()
+    custom_week_end = datetime.datetime.strptime((str(year)+'-'+custom_w[1]), "%Y-%m-%d").date()
     all_dates = []
     while date < enddate:
-        weeks[date.isocalendar()[1]]
         date += datetime.timedelta(days=1)
-        if date.isocalendar()[1] in mais_week:
-            weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d"))
+        if date >= mais_week_start and date <= mais_week_end:
             all_dates.append(date.strftime("%Y-%m-%d"))
-        elif date.isocalendar()[1] in rice_week:
-            weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d"))
+        elif date >= rice_week_start and date <= rice_week_end:
             all_dates.append(date.strftime("%Y-%m-%d"))
-        elif date.isocalendar()[1] in cereal_week:
-            weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d")) 
+        elif date >= cereal_week_start and date <= cereal_week_end:
             all_dates.append(date.strftime("%Y-%m-%d"))
-        elif date.isocalendar()[1] in custom_week:
-            weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d")) 
+        elif date >= custom_week_start and date <= custom_week_end:
             all_dates.append(date.strftime("%Y-%m-%d"))
     dictionary = dict(weeks)
     calendar = dict(dictionary)
@@ -89,3 +89,50 @@ def meteo_sensor(year):
     }
     return switcher.get(year, "Invalid year. For current year data use the API request.")
 
+# OLD FUNCTIONS
+# def manuring_periods(year, mais_w, rice_w, cereal_w, custom_w):
+#     """
+#     This function returns a dictionary where each key corresponds
+#     to the week number in a given year.
+#     The corresponding value is empty if there is no manuring in that week,
+#     while a list of days if there is manuring during that week is returned.
+#     It's required to pass the weeks corresponding to mais, rice and cereal manuring.
+#     """
+
+#     import datetime
+#     from collections import defaultdict
+#     import pandas as pd
+#     import numpy as np
+#     from plotly_calplot import calplot
+#     date = datetime.date(year, 1, 1)
+#     enddate = datetime.date(year, 12, 31)
+#     weeks = defaultdict(list)
+#     mais_week = mais_w
+#     rice_week = rice_w
+#     cereal_week = cereal_w
+#     custom_week = custom_w
+#     all_dates = []
+#     while date < enddate:
+#         weeks[date.isocalendar()[1]]
+#         date += datetime.timedelta(days=1)
+#         if date.isocalendar()[1] in mais_week:
+#             weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d"))
+#             all_dates.append(date.strftime("%Y-%m-%d"))
+#         elif date.isocalendar()[1] in rice_week:
+#             weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d"))
+#             all_dates.append(date.strftime("%Y-%m-%d"))
+#         elif date.isocalendar()[1] in cereal_week:
+#             weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d")) 
+#             all_dates.append(date.strftime("%Y-%m-%d"))
+#         elif date.isocalendar()[1] in custom_week:
+#             weeks[date.isocalendar()[1]].append(date.strftime("%Y-%m-%d")) 
+#             all_dates.append(date.strftime("%Y-%m-%d"))
+#     dictionary = dict(weeks)
+#     calendar = dict(dictionary)
+#     all_dates = pd.DataFrame(pd.Series(all_dates),columns=['date'])
+#     all_dates.date = pd.to_datetime(all_dates.date)
+#     all_dates['value'] = 1
+#     # creating the plot
+#     fig = calplot(all_dates, x="date", y="value")
+#     fig.show()
+#     return calendar
