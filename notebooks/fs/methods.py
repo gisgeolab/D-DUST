@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import time
 from timeit import timeit
-
+from plotly.subplots import make_subplots
 from ipywidgets import interact, interactive, fixed, interact_manual, VBox
 import multiprocessing as mp
 import ipywidgets as widgets
@@ -61,6 +61,33 @@ def show_bar(labels, scores, name):
     fig = px.bar(df, x="Features", y="Scores", color="Scores")
     fig.update_layout(title_text=name)
     fig.show()
+
+
+def show_bars(labels, matrix, method, geopackages):
+    fig = make_subplots(rows=len(geopackages), cols=1,  subplot_titles=geopackages)
+    for index, values in enumerate(matrix):
+        fig.add_trace(go.Bar(x=labels, y=values), row=index+1, col=1)
+        fig.update_yaxes(row=index + 1, col=1)
+        fig.update_xaxes(type="category", row=index + 1, col=1)
+
+
+    fig.update_layout(height=1200, width=600, title_text=method)
+    fig.update_layout(showlegend=False)
+    fig.show()
+
+def show_bars_log(labels, matrix, method, geopackages):
+    fig = make_subplots(rows=len(geopackages), cols=1, subplot_titles=geopackages)
+    for index, values in enumerate(matrix):
+        fig.add_trace(go.Bar(x=labels, y=values), row=index+1, col=1)
+        fig.update_yaxes(type="log", row=index + 1, col=1)
+        fig.update_xaxes(type="category", row=index + 1, col=1)
+
+    fig.update_layout(height=1200, width=600, title_text=method)
+    fig.update_layout(showlegend=False)
+    fig.show()
+
+
+
 
 
 def show_bar_log(labels, scores, name):
@@ -232,6 +259,56 @@ def chi2_test(X, y):
     barPlot_func_onedata(results, "Chi-Square Score")
     return scores
 
+def fs_results_computation(X, Y):
+    labels = list(X.columns)
+    results = pd.DataFrame()
+    results['Features'] = labels
+
+    #Pearson index computation
+    pearson = []
+    for (columnName, columnData) in X.iteritems():
+        pearson.append(scipy.stats.pearsonr(columnData, Y)[0])
+    results['Pearson'] = pearson
+
+    #Spearmnar index computation
+    spearmanr = []
+    for (columnName, columnData) in X.iteritems():
+        spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
+    results['Spearmanr'] = spearmanr
+
+    #Kendall tau computation
+    kendall = []
+    for (columnName, columnData) in X.iteritems():
+        kendall.append(scipy.stats.kendalltau(columnData, Y)[0])
+    results['Kendall'] = kendall
+
+    #Fisher's score computation
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.33, random_state=1)
+
+    # configure to select all features
+    fs = SelectKBest(score_func=f_regression, k='all')
+    # learn relationship from training data
+    fs.fit(X_train, y_train)
+    # transform train input data
+    fs.transform(X_train)
+    # transform test input data
+    fs.transform(X_test)
+    results['Fisher'] = fs.scores_
+
+    #Random Forest importance computation
+    # define the model
+    model = RandomForestRegressor()
+    # fit the model
+    model.fit(X, Y)
+    # get importance
+    results['Random Forest Importance'] = model.feature_importances_
+
+    return results
+
+
+
+
+
 
 def compute_dispersion_ratio(X):
     labels = list(X.columns)
@@ -402,10 +479,10 @@ def mgwr_param(data, target):
     csv = pd.concat([csv, pd.DataFrame(X)], axis=1)
     csv.to_csv(r'results/params.csv', index=False)
 
-     
 
 
-def mgwr(data, target):
+
+def mgwr(data, target, iterations):
     warnings.filterwarnings("ignore")
     temp = pd.DataFrame(data).dropna(axis=1)
 #    temp.drop(temp.tail(200).index,
@@ -423,11 +500,14 @@ def mgwr(data, target):
     df.pop('geometry')
     df.pop('left')
     df.pop('right')
+    df.pop('lat_cen')
+    df.pop('lng_cen')
+
     # X = df.drop(['prim_road', 'sec_road', 'highway', 'farms'], axis=1)
     #labels = list(X.columns)
     labels = list(df.columns)
     coords = list(zip(temp['lat_cen'], temp['lng_cen']))
-
+    
     X = df.to_numpy()
 
     X = (X - X.mean(axis=0)) / X.std(axis=0)
@@ -437,38 +517,42 @@ def mgwr(data, target):
 
     sel = Sel_BW(coords, Y, X, multi=True, kernel='gaussian', spherical=True, fixed=True)
 
-    n_proc = 2
+    n_proc = 8
     pool = mp.Pool(n_proc)
-    print('ok')
     #bw = sel.search(pool=pool)
     #print('bw:', bw)
-
-    bw = sel.search(pool=pool)
+    
+    bw = sel.search(pool=pool, criterion='CV', max_iter_multi=iterations)
 
     print('bw(intercept):', bw[0])
 
     mgwr = MGWR(coords, Y, X, selector=sel, spherical=True, kernel='gaussian', fixed=True)
     mgwr_results = mgwr.fit(pool=pool)
-
-    df_bw = pd.DataFrame(bw)
+    pool.close()  # Close the pool when you finish
+    pool.join()
+    bandwidths = np.delete(bw, 0)
+    df_bw = pd.DataFrame(bandwidths)
     df_betas = pd.DataFrame(mgwr_results.params)
-    df_bw.to_csv(r'results/mgwr_bw.csv', index=False)
-    df_betas.to_csv(r'results/mgwr_betas.csv', index=False)
+    df_bw.to_csv(r'results/mgwr_bw'+str(iterations)+'.csv', index=False)
+    df_betas.to_csv(r'results/mgwr_betas'+str(iterations)+'.csv', index=False)
 
 
     mgwr_results.summary()
 
     fig = go.Figure(data=[
-        go.Bar(name='Mean', x=labels, y=df_betas.mean(axis=1)),
-        go.Bar(name='Median', x=labels, y=df_betas.median(axis=1)),
-        go.Bar(name='Bandwidth', x=labels, y=df_bw)
+       # go.Bar(name='Mean', x=labels, y=df_betas.mean(axis=0)),
+        go.Bar(name='Median', x=labels, y=df_betas.median(axis=0)),
+      #  go.Bar(name='Bandwidth', x=labels, y=df_bw)
     ])
     # Change the bar mode
-    fig.update_layout(barmode='group')
     fig.show()
 
-    pool.close()  # Close the pool when you finish
-    pool.join()
+    fig2 = go.Figure(data=[
+        go.Bar(name='Bandwidth', x=labels, y=df_bw)
+    ])
+    fig2.show()
+
+
 
 #Not used
 def compute_mgwr_betas(df_betas, labels):
@@ -520,4 +604,5 @@ def score_rfe(dataframe):
             scores.append(0)
 
     return scores
+
 
