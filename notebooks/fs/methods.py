@@ -71,7 +71,7 @@ def show_bars(labels, matrix, method, geopackages):
         fig.update_xaxes(type="category", row=index + 1, col=1)
 
 
-    fig.update_layout(height=1200, width=600, title_text=method)
+    fig.update_layout(height=1500, width=600, title_text=method)
     fig.update_layout(showlegend=False)
     fig.show()
 
@@ -363,8 +363,8 @@ def exhaustive_feature_selection(X, y):
     lr = LinearRegression()
 
     efs1 = EFS(lr,
-               min_features=2,
-               max_features=4,
+               min_features=10,
+               max_features=20,
                scoring='r2',
                n_jobs=-1,
                cv=5)
@@ -541,14 +541,14 @@ def mgwr(data, target, iterations):
 
     fig = go.Figure(data=[
        # go.Bar(name='Mean', x=labels, y=df_betas.mean(axis=0)),
-        go.Bar(name='Median', x=labels, y=df_betas.median(axis=0)),
+        go.Bar(name='Median', x=labels, y=bandwidths),
       #  go.Bar(name='Bandwidth', x=labels, y=df_bw)
     ])
     # Change the bar mode
     fig.show()
 
     fig2 = go.Figure(data=[
-        go.Bar(name='Bandwidth', x=labels, y=df_bw)
+        go.Bar(name='Bandwidth', x=labels, y=pd.Series(df_bw))
     ])
     fig2.show()
 
