@@ -13,7 +13,7 @@ from matplotlib.container import Container
 from mgwr.gwr import MGWR
 from mgwr.sel_bw import Sel_BW
 from numpy import arange, std, log
-from scipy.stats import gmean
+from scipy.stats import gmean, stats
 import numpy as np
 from IPython.display import display, clear_output
 from ipywidgets import widgets
@@ -31,19 +31,22 @@ import plotly.graph_objects as go
 import plotly.express as px
 import warnings
 
-#Not used
+
+# Not used
 def NormalizeData(data):
     result = (data - np.min(data)) / (np.max(data) - np.min(data))
     return result
 
-#It normalized 1D array with MinMaxscaler
+
+# It normalized 1D array with MinMaxscaler
 def NormalizeData1D(data):
     data = np.array(data).reshape(-1, 1)
     scaler = MinMaxScaler()
     result = scaler.fit_transform(data).reshape((-1,))
     return result
 
-#Not used
+
+# Not used
 def NormalizeData2D(data):
     scaler = MinMaxScaler()
     return scaler.fit_transform(data)
@@ -64,30 +67,27 @@ def show_bar(labels, scores, name):
 
 
 def show_bars(labels, matrix, method, geopackages):
-    fig = make_subplots(rows=len(geopackages), cols=1,  subplot_titles=geopackages)
+    fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=geopackages)
     for index, values in enumerate(matrix):
-        fig.add_trace(go.Bar(x=labels, y=values), row=index+1, col=1)
-        fig.update_yaxes(row=index + 1, col=1)
-        fig.update_xaxes(type="category", row=index + 1, col=1)
+        fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
+        fig.update_yaxes(row=int(index / 2) + 1, col=index % 2 + 1)
+        fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
 
-
-    fig.update_layout(height=1500, width=600, title_text=method)
-    fig.update_layout(showlegend=False)
+    fig.update_layout(height=1000, title_text=method)
+    fig.update_layout(showlegend=False, autosize=True)
     fig.show()
+
 
 def show_bars_log(labels, matrix, method, geopackages):
-    fig = make_subplots(rows=len(geopackages), cols=1, subplot_titles=geopackages)
+    fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=geopackages)
     for index, values in enumerate(matrix):
-        fig.add_trace(go.Bar(x=labels, y=values), row=index+1, col=1)
-        fig.update_yaxes(type="log", row=index + 1, col=1)
-        fig.update_xaxes(type="category", row=index + 1, col=1)
+        fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
+        fig.update_yaxes(type="log", row=int(index / 2) + 1, col=index % 2 + 1)
+        fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
 
-    fig.update_layout(height=1200, width=600, title_text=method)
-    fig.update_layout(showlegend=False)
+    fig.update_layout(height=1000, title_text=method)
+    fig.update_layout(showlegend=False, autosize=True)
     fig.show()
-
-
-
 
 
 def show_bar_log(labels, scores, name):
@@ -154,7 +154,7 @@ def barPlot_func_onedata(values, plot_name):
     display(ui, out)
 
 
-#method which returns labels of features which have no nan values
+# method which returns labels of features which have no nan values
 def check_NotNull(df):
     bool = df.isna()
     labels = []
@@ -259,30 +259,31 @@ def chi2_test(X, y):
     barPlot_func_onedata(results, "Chi-Square Score")
     return scores
 
+
 def fs_results_computation(X, Y):
     labels = list(X.columns)
     results = pd.DataFrame()
     results['Features'] = labels
 
-    #Pearson index computation
+    # Pearson index computation
     pearson = []
     for (columnName, columnData) in X.iteritems():
         pearson.append(scipy.stats.pearsonr(columnData, Y)[0])
     results['Pearson'] = pearson
 
-    #Spearmnar index computation
+    # Spearmnar index computation
     spearmanr = []
     for (columnName, columnData) in X.iteritems():
         spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
     results['Spearmanr'] = spearmanr
 
-    #Kendall tau computation
+    # Kendall tau computation
     kendall = []
     for (columnName, columnData) in X.iteritems():
         kendall.append(scipy.stats.kendalltau(columnData, Y)[0])
     results['Kendall'] = kendall
 
-    #Fisher's score computation
+    # Fisher's score computation
     X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.33, random_state=1)
 
     # configure to select all features
@@ -295,7 +296,7 @@ def fs_results_computation(X, Y):
     fs.transform(X_test)
     results['Fisher'] = fs.scores_
 
-    #Random Forest importance computation
+    # Random Forest importance computation
     # define the model
     model = RandomForestRegressor()
     # fit the model
@@ -303,11 +304,9 @@ def fs_results_computation(X, Y):
     # get importance
     results['Random Forest Importance'] = model.feature_importances_
 
+    #results['Betas Median (MGWR)'] = mgwr_results(X, Y, 10, coords)
+
     return results
-
-
-
-
 
 
 def compute_dispersion_ratio(X):
@@ -447,12 +446,13 @@ def evaluate_model(model, X1, y1):
     scores = cross_val_score(model, X, y, scoring='accuracy', cv=3, n_jobs=-1)
     return scores
 
-#Method used to process data before the use of FastGWR. It returns a Dataframe of the params as mentioned in https://github.com/Ziqi-Li/FastGWR
+
+# Method used to process data before the use of FastGWR. It returns a Dataframe of the params as mentioned in https://github.com/Ziqi-Li/FastGWR
 def mgwr_param(data, target):
     warnings.filterwarnings("ignore")
     temp = pd.DataFrame(data).dropna(axis=1)
-    #Used to decrease the sample size
-    #temp.drop(temp.tail(200).index, inplace=True)
+    # Used to decrease the sample size
+    # temp.drop(temp.tail(200).index, inplace=True)
     temp.drop(temp.tail(100).index, inplace=True)
     y = temp[target]
 
@@ -467,7 +467,6 @@ def mgwr_param(data, target):
     df.pop('right')
     df = df.iloc[:, :-70]
 
-
     X = df.to_numpy()
     X = (X - X.mean(axis=0)) / X.std(axis=0)
     Y = y.reshape((-1, 1))
@@ -480,81 +479,67 @@ def mgwr_param(data, target):
     csv.to_csv(r'results/params.csv', index=False)
 
 
-
-
-def mgwr(data, target, iterations):
+def mgwr_beta(data, target, iterations):
     warnings.filterwarnings("ignore")
     temp = pd.DataFrame(data).dropna(axis=1)
-#    temp.drop(temp.tail(200).index,
-#           inplace=True)
-
+    #    temp.drop(temp.tail(200).index,
+    #           inplace=True)
     y = temp[target]
-
     df = pd.DataFrame(temp)
-
     y = y.values.ravel()
-
-
-    df.pop('bottom')
-    df.pop('top')
-    df.pop('geometry')
-    df.pop('left')
-    df.pop('right')
     df.pop('lat_cen')
     df.pop('lng_cen')
-
-    # X = df.drop(['prim_road', 'sec_road', 'highway', 'farms'], axis=1)
-    #labels = list(X.columns)
-    labels = list(df.columns)
     coords = list(zip(temp['lat_cen'], temp['lng_cen']))
-    
     X = df.to_numpy()
-
     X = (X - X.mean(axis=0)) / X.std(axis=0)
-
     Y = y.reshape((-1, 1))
     Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
 
     sel = Sel_BW(coords, Y, X, multi=True, kernel='gaussian', spherical=True, fixed=True)
-
     n_proc = 8
     pool = mp.Pool(n_proc)
-    #bw = sel.search(pool=pool)
-    #print('bw:', bw)
-    
     bw = sel.search(pool=pool, criterion='CV', max_iter_multi=iterations)
-
-    print('bw(intercept):', bw[0])
 
     mgwr = MGWR(coords, Y, X, selector=sel, spherical=True, kernel='gaussian', fixed=True)
     mgwr_results = mgwr.fit(pool=pool)
     pool.close()  # Close the pool when you finish
     pool.join()
     bandwidths = np.delete(bw, 0)
-    df_bw = pd.DataFrame(bandwidths)
-    df_betas = pd.DataFrame(mgwr_results.params)
-    df_bw.to_csv(r'results/mgwr_bw'+str(iterations)+'.csv', index=False)
-    df_betas.to_csv(r'results/mgwr_betas'+str(iterations)+'.csv', index=False)
-
 
     mgwr_results.summary()
 
-    fig = go.Figure(data=[
-       # go.Bar(name='Mean', x=labels, y=df_betas.mean(axis=0)),
-        go.Bar(name='Median', x=labels, y=bandwidths),
-      #  go.Bar(name='Bandwidth', x=labels, y=df_bw)
-    ])
-    # Change the bar mode
-    fig.show()
-
-    fig2 = go.Figure(data=[
-        go.Bar(name='Bandwidth', x=labels, y=pd.Series(df_bw))
-    ])
-    fig2.show()
+    return np.median(mgwr_results.params, axis=1)
 
 
+def mgwr_results(X, target, iterations, coords):
+    warnings.filterwarnings("ignore")
+    X = X.apply(stats.zscore)
+    X = X.dropna(axis=1)
+    X = X.to_numpy()
+    Y = target.values.ravel()
+    Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
 
-#Not used
+    sel = Sel_BW(coords, Y, X, multi=True, kernel='gaussian', spherical=True, fixed=True)
+
+    n_proc = 8
+    pool = mp.Pool(n_proc)
+    # bw = sel.search(pool=pool)
+    # print('bw:', bw)
+
+    bw = sel.search(pool=pool, criterion='CV', max_iter_multi=iterations)
+
+    mgwr = MGWR(coords, Y, X, selector=sel, spherical=True, kernel='gaussian', fixed=True)
+    mgwr_results = mgwr.fit(pool=pool)
+
+    # Close the pool when you finish
+    pool.close()
+    pool.join()
+    # bandwidths = np.delete(bw, 0)
+    mgwr_results.summary()
+    return np.median(mgwr_results.params, axis=1)
+
+
+# Not used
 def compute_mgwr_betas(df_betas, labels):
     mean = df_betas.mean(axis=0)
     median = df_betas.median(axis=0)
@@ -566,14 +551,16 @@ def compute_mgwr_betas(df_betas, labels):
 
     return results
 
-#Not used
+
+# Not used
 def compute_mgwr_bw(df_bw, labels):
     labels = labels.insert(0, 'intercept')
     results = pd.DataFrame()
     results['Labels'] = labels
     results['Bandwidth'] = df_bw
 
-#exclude all features with '_st' and '_lcs' in the name
+
+# exclude all features with '_st' and '_lcs' in the name
 def noSensor_features(strings):
     result = []
     for i in strings:
@@ -584,7 +571,7 @@ def noSensor_features(strings):
     return result
 
 
-#Not used
+# Not used
 def clean_dataset_nosensor(df, labels):
     X = pd.DataFrame(df, columns=labels).dropna()
     labels = check_NotNull(X)
@@ -592,7 +579,8 @@ def clean_dataset_nosensor(df, labels):
     X.pop('geometry')
     return X
 
-#Not used
+
+# Not used
 def score_rfe(dataframe):
     scores = []
     for i in dataframe['Ranking']:
@@ -604,5 +592,3 @@ def score_rfe(dataframe):
             scores.append(0)
 
     return scores
-
-
