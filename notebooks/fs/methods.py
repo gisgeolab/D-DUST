@@ -29,6 +29,7 @@ from sklearn.tree import DecisionTreeClassifier
 import plotly.graph_objects as go
 import plotly.express as px
 import warnings
+from scipy.linalg import LinAlgWarning
 
 
 # Not used
@@ -447,6 +448,8 @@ def evaluate_model(model, X1, y1):
 
 
 def mgwr_beta(data, target, iterations, geopackage):
+
+    warnings.filterwarnings(action='ignore', category=LinAlgWarning, module='mgwr')
     warnings.filterwarnings("ignore")
 
     labels = check_NotNull(data)  # temp.drop(temp.tail(200).index,
