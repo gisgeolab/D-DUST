@@ -1,6 +1,5 @@
-from __future__ import print_function
-
 import time
+from pathlib import Path
 from timeit import timeit
 from plotly.subplots import make_subplots
 from ipywidgets import interact, interactive, fixed, interact_manual, VBox
@@ -12,7 +11,7 @@ from ipywidgets import widgets, interact
 from matplotlib.container import Container
 from mgwr.gwr import MGWR
 from mgwr.sel_bw import Sel_BW
-from numpy import arange, std, log
+from numpy import arange, std, log, savetxt, loadtxt
 from scipy.stats import gmean, stats
 import numpy as np
 from IPython.display import display, clear_output
@@ -304,7 +303,7 @@ def fs_results_computation(X, Y):
     # get importance
     results['Random Forest Importance'] = model.feature_importances_
 
-    #results['Betas Median (MGWR)'] = mgwr_results(X, Y, 10, coords)
+    # results['Betas Median (MGWR)'] = mgwr_results(X, Y, 10, coords)
 
     return results
 
@@ -387,7 +386,7 @@ def RF_importance(X, y):
     labels = list(X.columns)
 
     # define the model
-    model = RandomForestRegressor()
+    model = RandomForestRegressor(n_estimators=130)
     # fit the model
     model.fit(X, y)
     # get importance
@@ -447,68 +446,44 @@ def evaluate_model(model, X1, y1):
     return scores
 
 
-# Method used to process data before the use of FastGWR. It returns a Dataframe of the params as mentioned in https://github.com/Ziqi-Li/FastGWR
-def mgwr_param(data, target):
+def mgwr_beta(data, target, iterations, geopackage):
     warnings.filterwarnings("ignore")
-    temp = pd.DataFrame(data).dropna(axis=1)
-    # Used to decrease the sample size
-    # temp.drop(temp.tail(200).index, inplace=True)
-    temp.drop(temp.tail(100).index, inplace=True)
-    y = temp[target]
 
-    df = pd.DataFrame(temp)
-
-    y = y.values.ravel()
-
-    df.pop('bottom')
-    df.pop('top')
-    df.pop('geometry')
-    df.pop('left')
-    df.pop('right')
-    df = df.iloc[:, :-70]
-
-    X = df.to_numpy()
-    X = (X - X.mean(axis=0)) / X.std(axis=0)
-    Y = y.reshape((-1, 1))
-    Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
-    csv = pd.DataFrame()
-    csv['X'] = temp['lat_cen']
-    csv['Y'] = temp['lng_cen']
-    csv['target'] = temp[target]
-    csv = pd.concat([csv, pd.DataFrame(X)], axis=1)
-    csv.to_csv(r'results/params.csv', index=False)
-
-
-def mgwr_beta(data, target, iterations):
-    warnings.filterwarnings("ignore")
-    temp = pd.DataFrame(data).dropna(axis=1)
-    #    temp.drop(temp.tail(200).index,
+    labels = check_NotNull(data)  # temp.drop(temp.tail(200).index,
     #           inplace=True)
-    y = temp[target]
-    df = pd.DataFrame(temp)
-    y = y.values.ravel()
-    df.pop('lat_cen')
-    df.pop('lng_cen')
-    coords = list(zip(temp['lat_cen'], temp['lng_cen']))
-    X = df.to_numpy()
+    X = pd.DataFrame(data=data, columns=labels)
+    Y = X[target]
+    X.pop(target)
+    Y = Y.values.ravel()
+
+    coords = list(zip(X['lat_cen'], X['lng_cen']))
+    X.pop('lat_cen')
+    X.pop('lng_cen')
+
+    X = X.to_numpy()
     X = (X - X.mean(axis=0)) / X.std(axis=0)
-    Y = y.reshape((-1, 1))
+    Y = Y.reshape((-1, 1))
     Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
+
 
     sel = Sel_BW(coords, Y, X, multi=True, kernel='gaussian', spherical=True, fixed=True)
-    n_proc = 8
+    n_proc = 2
     pool = mp.Pool(n_proc)
     bw = sel.search(pool=pool, criterion='CV', max_iter_multi=iterations)
-
     mgwr = MGWR(coords, Y, X, selector=sel, spherical=True, kernel='gaussian', fixed=True)
     mgwr_results = mgwr.fit(pool=pool)
     pool.close()  # Close the pool when you finish
     pool.join()
+
     bandwidths = np.delete(bw, 0)
+    med = np.median(mgwr_results.params, axis=0)
+    med = np.delete(med, 0)
 
-    mgwr_results.summary()
+    res = pd.DataFrame()
+    res['Bandwidthds'] = bandwidths
+    res['Betas Median'] = med
 
-    return np.median(mgwr_results.params, axis=1)
+    return res
 
 
 def mgwr_results(X, target, iterations, coords):
@@ -536,7 +511,7 @@ def mgwr_results(X, target, iterations, coords):
     pool.join()
     # bandwidths = np.delete(bw, 0)
     mgwr_results.summary()
-    return np.median(mgwr_results.params, axis=1)
+    return np.median(mgwr_results.params, axis=0)
 
 
 # Not used
