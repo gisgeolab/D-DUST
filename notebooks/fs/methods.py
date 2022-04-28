@@ -302,7 +302,7 @@ def fs_results_computation(X, Y):
     # fit the model
     model.fit(X, Y)
     # get importance
-    results['Random Forest Importance'] = model.feature_importances_
+    results['RF Importance'] = model.feature_importances_
 
     # results['Betas Median (MGWR)'] = mgwr_results(X, Y, 10, coords)
 
@@ -398,7 +398,7 @@ def RF_importance(X, y):
     results['Features'] = labels
 
     # plot feature importance
-    barPlot_func_onedata(results, "Random Forest Importance")
+    barPlot_func_onedata(results, "RF Importance")
     return importance
 
 
