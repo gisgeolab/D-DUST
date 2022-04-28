@@ -66,9 +66,10 @@ def show_bar(labels, scores, name):
     fig.show()
 
 
-def show_bars(labels, matrix, method, geopackages):
+def show_bars(labels_list, matrix, method, geopackages):
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=geopackages)
     for index, values in enumerate(matrix):
+        labels=labels_list[index]
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_yaxes(row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
@@ -78,9 +79,10 @@ def show_bars(labels, matrix, method, geopackages):
     fig.show()
 
 
-def show_bars_log(labels, matrix, method, geopackages):
+def show_bars_log(labels_list, matrix, method, geopackages):
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=geopackages)
     for index, values in enumerate(matrix):
+        labels=labels_list[index]
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_yaxes(type="log", row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
