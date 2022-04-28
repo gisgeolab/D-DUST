@@ -67,7 +67,10 @@ def show_bar(labels, scores, name):
 
 
 def show_bars(labels_list, matrix, method, geopackages):
-    fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=geopackages)
+    titles = []
+    for g in geopackages:
+        titles.append(getTitle_gpkg(g))
+    fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
         labels=labels_list[index]
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
@@ -80,7 +83,10 @@ def show_bars(labels_list, matrix, method, geopackages):
 
 
 def show_bars_log(labels_list, matrix, method, geopackages):
-    fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=geopackages)
+    titles = []
+    for g in geopackages:
+        titles.append(getTitle_gpkg(g))
+    fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
         labels=labels_list[index]
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
@@ -97,6 +103,9 @@ def show_bar_log(labels, scores, name):
     fig = px.bar(df, x="Features", y="Scores", color="Scores", log_y=True)
     fig.update_layout(title_text=name)
     fig.show()
+
+def getTitle_gpkg(string):
+   return string[12:14] + '/' + string[10:12] + ' - ' + string[17:19] + '/' + string[15:17] + ' (' + string[20:24] + ')'
 
 
 def barPlot_func_onedata(values, plot_name):
