@@ -340,18 +340,18 @@ def compute_dispersion_ratio(X):
     return dispersion_ratio
 
 
-def variance_threshold(X_train, th):
+def variance_threshold(data, th):
     # define thresholds to check
-    thresholds = arange(0.0, 0.55, 0.05)
+    #thresholds = arange(0.0, 0.55, 0.05)
     # apply transform with each threshold
     selector = VarianceThreshold(threshold=th)
-    selector.fit_transform(X_train)
+    selector.fit_transform(data)
 
     results = pd.DataFrame()
 
     scores = []
-    for i in selector.get_support():
-        if i == False:
+    for i in selector.variances_:
+        if i >= th:
             scores.append(1)
         else:
             scores.append(0)
@@ -359,8 +359,7 @@ def variance_threshold(X_train, th):
     results['Features'] = selector.feature_names_in_
     results['Scores'] = scores
 
-    barPlot_func_onedata(results, "Variance Threshold")
-    return scores
+    return results
 
 
 def exhaustive_feature_selection(X, y):
