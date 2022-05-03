@@ -356,7 +356,7 @@ def variance_threshold(data, th):
         else:
             scores.append(0)
 
-    results['Features'] = selector.feature_names_in_
+    results['Features'] = data.columns
     results['Scores'] = scores
 
     return results
