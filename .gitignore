@@ -9,3 +9,4 @@ notebooks/results
 notebooks/fs/.ipynb_checkpoints/methods-checkpoint.py
 notebooks/fs/__pycache__/methods.cpython-38.pyc
 notebooks/fs/__pycache__/methods.cpython-39.pyc
+*.pyc
