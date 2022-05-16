@@ -105,7 +105,7 @@ def show_bar_log(labels, scores, name):
     fig.show()
 
 def getTitle_gpkg(string):
-   return string[12:14] + '/' + string[10:12] + ' - ' + string[17:19] + '/' + string[15:17] + ' (' + string[20:24] + ')'
+   return string[11:13] + '/' + string[9:11] + ' - ' + string[16:18] + '/' + string[14:16] + ' (' + string[19:23] + ')'
 
 
 def barPlot_func_onedata(values, plot_name):
