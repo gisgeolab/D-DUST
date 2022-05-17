@@ -69,7 +69,7 @@ def show_bar(labels, scores, name):
 def show_bars(labels_list, matrix, method, geopackages):
     titles = []
     for g in geopackages:
-        titles.append(getTitle_gpkg(g))
+        titles.append(g)
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
         labels=labels_list[index]
@@ -85,7 +85,7 @@ def show_bars(labels_list, matrix, method, geopackages):
 def show_bars_log(labels_list, matrix, method, geopackages):
     titles = []
     for g in geopackages:
-        titles.append(getTitle_gpkg(g))
+        titles.append(g)
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
         labels=labels_list[index]
