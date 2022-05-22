@@ -12,6 +12,7 @@ from matplotlib.container import Container
 from mgwr.gwr import MGWR
 from mgwr.sel_bw import Sel_BW
 from numpy import arange, std, log, savetxt, loadtxt
+from scipy.spatial import cKDTree
 from scipy.stats import gmean, stats
 import numpy as np
 from IPython.display import display, clear_output
@@ -31,6 +32,20 @@ import plotly.express as px
 import warnings
 from scipy.linalg import LinAlgWarning
 
+
+def add_buffer(points, data, uncleaned_data, k):
+    nA = np.array(list(points.geometry.apply(lambda x: (x.x, x.y))))
+    nB = np.array(list(data.geometry.centroid.apply(lambda x: (x.x, x.y))))
+    btree = cKDTree(nB)
+
+    for cell in nA:
+        
+        dist, idx = btree.query(cell, k)
+
+
+        for i in range(0, k):
+            uncleaned_data.at[idx[i], 'pm25_st'] = uncleaned_data.loc[idx[i]]['pm25_int']
+    return uncleaned_data
 
 # Not used
 def NormalizeData(data):
