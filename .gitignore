@@ -7,7 +7,9 @@ notebooks/mypackage/__pycache__
 notebooks/features_0_01
 notebooks/features_0_1
 .pyc
-notebooks/fs/.ipynb_checkpoints/methods-checkpoint.py
-notebooks/fs/__pycache__/methods.cpython-38.pyc
-notebooks/fs/__pycache__/methods.cpython-39.pyc
+notebooks/fs/.ipynb_checkpoints
+notebooks/fs/__pycache__
 *.pyc
+notebooks/features_0_1
+notebooks/features_0_01
+notebooks/test
