@@ -34,12 +34,12 @@ import warnings
 from scipy.linalg import LinAlgWarning
 
 def increase_data(data, sensor, k):
-    points_st = gpd.read_file('arpa_stations/'+sensor+'.gpkg')
+    points_st = data[~data[sensor].isnull()]
     return add_buffer(points_st, data, data, k)
 
 
 def add_buffer(points, data, uncleaned_data, k):
-    nA = np.array(list(points.geometry.apply(lambda x: (x.x, x.y))))
+    nA = np.array(list(points.geometry.centroid.apply(lambda x: (x.x, x.y))))
     nB = np.array(list(data.geometry.centroid.apply(lambda x: (x.x, x.y))))
     btree = cKDTree(nB)
 
