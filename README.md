@@ -2,5 +2,7 @@
 
 ### Contents description
 
-- [fs_results.ipynb](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/fs_results_arpaFiltered.ipynb): Notebook used to evaluate feature selection results for each dataset contained in the [grids/](https://github.com/opengeolab/D-DUST/tree/thesis_MB/notebooks/grids) folder. 
-- [prediction_model.ipynb](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/prediction_model.ipynb): Notebook used for prediciton model. For now a Regression-based neural networks is implmented.
+- [Feature Selection](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/fs_results_arpaFiltered.ipynb): Notebook used to evaluate feature selection results for each dataset contained in the [grids/](https://github.com/opengeolab/D-DUST/tree/thesis_MB/notebooks/grids) folder. 
+- [Keras prediction model](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/Keras_prediction_model.ipynb): Prediciton model based on neural networks regression.
+- [Random Forest prediction model](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/RandomForest_prediction_model.ipynb))): Prediciton model based on Random Forest regression.
+- [Buffer via Knn](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/buffer_knn.ipynb): Notebook used to increase cell with target variable, assignining it the values interpolated. Cell added are queried via K-nearest neighbors method.
