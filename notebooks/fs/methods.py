@@ -11,6 +11,7 @@ from ipywidgets import widgets, interact
 from matplotlib.container import Container
 from mgwr.gwr import MGWR
 from mgwr.sel_bw import Sel_BW
+import geopandas as gpd
 from numpy import arange, std, log, savetxt, loadtxt
 from scipy.spatial import cKDTree
 from scipy.stats import gmean, stats
@@ -32,6 +33,11 @@ import plotly.express as px
 import warnings
 from scipy.linalg import LinAlgWarning
 
+def increase_data(data, sensor, k):
+    points_st = gpd.read_file('arpa_stations/'+sensor+'.gpkg')
+    data_filtered = data[data['pm25_st'].isnull()]
+    return add_buffer(points_st, data, data, k)
+    
 
 def add_buffer(points, data, uncleaned_data, k):
     nA = np.array(list(points.geometry.apply(lambda x: (x.x, x.y))))
