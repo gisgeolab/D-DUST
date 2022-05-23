@@ -35,9 +35,8 @@ from scipy.linalg import LinAlgWarning
 
 def increase_data(data, sensor, k):
     points_st = gpd.read_file('arpa_stations/'+sensor+'.gpkg')
-    data_filtered = data[data['pm25_st'].isnull()]
     return add_buffer(points_st, data, data, k)
-    
+
 
 def add_buffer(points, data, uncleaned_data, k):
     nA = np.array(list(points.geometry.apply(lambda x: (x.x, x.y))))
@@ -45,9 +44,7 @@ def add_buffer(points, data, uncleaned_data, k):
     btree = cKDTree(nB)
 
     for cell in nA:
-        
         dist, idx = btree.query(cell, k)
-
 
         for i in range(0, k):
             uncleaned_data.at[idx[i], 'pm25_st'] = uncleaned_data.loc[idx[i]]['pm25_int']
