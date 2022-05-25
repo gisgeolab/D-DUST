@@ -33,12 +33,43 @@ import plotly.express as px
 import warnings
 from scipy.linalg import LinAlgWarning
 
+
+def process_data(data, k):
+    st = [col for col in data.columns if col.endswith('_st')]
+    interpolated = [col for col in data.columns if col.endswith('_int')]
+    data = increase_data(data, 'pm25_st', k)
+    data.pop('dusaf')
+    data.pop('siarl')
+    data.pop('top')
+    data.pop('bottom')
+    data.pop('right')
+    data.pop('left')
+    data.pop('pm25_int')
+    return data
+
+"""
+    for col in st:
+        data = increase_data(data, col, k)
+
+    for col in interpolated:
+        if(col in ['pm25_int', 'nox_int', 'no2_int']):
+            data.pop(col)
+"""
+
+
+
+
+
+
+
 def increase_data(data, sensor, k):
     points_st = data[~data[sensor].isnull()]
-    return add_buffer(points_st, data, data, k)
+    return add_buffer(points_st, data, data, k, sensor[:-3])
 
 
-def add_buffer(points, data, uncleaned_data, k):
+def add_buffer(points, data, uncleaned_data, k, sensor):
+    warnings.filterwarnings("ignore")
+
     nA = np.array(list(points.geometry.centroid.apply(lambda x: (x.x, x.y))))
     nB = np.array(list(data.geometry.centroid.apply(lambda x: (x.x, x.y))))
     btree = cKDTree(nB)
@@ -47,7 +78,7 @@ def add_buffer(points, data, uncleaned_data, k):
         dist, idx = btree.query(cell, k)
 
         for i in range(0, k):
-            uncleaned_data.at[idx[i], 'pm25_st'] = uncleaned_data.loc[idx[i]]['pm25_int']
+            uncleaned_data.at[idx[i], sensor+'_st'] = uncleaned_data.loc[idx[i]][sensor+'_int']
     return uncleaned_data
 
 # Not used
