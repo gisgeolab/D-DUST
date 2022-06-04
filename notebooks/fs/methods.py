@@ -32,7 +32,28 @@ import plotly.graph_objects as go
 import plotly.express as px
 import warnings
 from scipy.linalg import LinAlgWarning
+import borda.count
 
+def borda_voting(dataframe):
+    labels = dataframe['Features']
+    dataframe = dataframe.loc[:, dataframe.columns != 'Features']
+
+
+    selection = borda.count.Election()
+    selection.set_candidates(labels.tolist())
+    for col in dataframe.columns:
+        method_ranking = getRanks(dataframe[col].tolist(), labels)
+        voter = borda.count.Voter(selection, col)
+        voter.votes(method_ranking)
+    return selection
+
+
+def getRanks(values, labels):
+    zipped = list(zip(labels, values))
+
+    data = pd.DataFrame(data = zipped, columns=['Features', 'Scores'])
+    data.sort_values(by='Scores', axis=0, ascending=False, inplace=True, kind='quicksort')
+    return data['Features'].tolist()
 
 def process_data(data, k):
     st = [col for col in data.columns if col.endswith('_st')]
@@ -423,7 +444,7 @@ def exhaustive_feature_selection(X, y):
     efs1 = EFS(lr,
                min_features=10,
                max_features=20,
-               scoring='r2',
+               scoring='mae',
                n_jobs=-1,
                cv=5)
 

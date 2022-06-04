@@ -423,7 +423,7 @@ def exhaustive_feature_selection(X, y):
     efs1 = EFS(lr,
                min_features=10,
                max_features=20,
-               scoring='r2',
+               scoring='mae',
                n_jobs=-1,
                cv=5)
 
