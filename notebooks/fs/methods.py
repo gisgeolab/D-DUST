@@ -33,6 +33,8 @@ import plotly.express as px
 import warnings
 from scipy.linalg import LinAlgWarning
 import borda.count
+import pyrankvote
+from pyrankvote import Candidate, Ballot
 
 def borda_voting(dataframe):
     labels = dataframe['Features']
@@ -46,6 +48,23 @@ def borda_voting(dataframe):
         voter = borda.count.Voter(selection, col)
         voter.votes(method_ranking)
     return selection
+
+def pyrankVote(dataframe):
+    labels = dataframe['Features']
+    candidates = []
+    dataframe = dataframe.loc[:, dataframe.columns != 'Features']
+
+    for candidate in labels:
+        candidates.append(Candidate(candidate))
+
+    ballots = []
+    for col in dataframe.columns:
+        method_ranking = getRanks(dataframe[col].tolist(), candidates)
+        ballots.append(Ballot(ranked_candidates=method_ranking))
+
+    election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
+    print(election_result)
+    return election_result
 
 
 def getRanks(values, labels):
