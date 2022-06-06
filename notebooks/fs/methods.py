@@ -33,23 +33,31 @@ import plotly.express as px
 import warnings
 from scipy.linalg import LinAlgWarning
 import borda.count
-import pyrankvote
-from pyrankvote import Candidate, Ballot
+
 
 def borda_voting(dataframe):
     labels = dataframe['Features']
-    dataframe = dataframe.loc[:, dataframe.columns != 'Features']
-
+    dataframe_new = dataframe.loc[:, dataframe.columns != 'Features']
 
     selection = borda.count.Election()
     selection.set_candidates(labels.tolist())
-    for col in dataframe.columns:
-        method_ranking = getRanks(dataframe[col].tolist(), labels)
+    for col in dataframe_new.columns:
+        method_ranking = getRanks(dataframe_new[col].tolist(), labels)
         voter = borda.count.Voter(selection, col)
         voter.votes(method_ranking)
-    return selection
 
-def pyrankVote(dataframe):
+    zipped = list(zip(list(selection.votes), list(selection.votes.values())))
+
+    results = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
+
+    results = results.set_index('Features')
+    results = results.reindex(index=dataframe['Features'])
+    results = results.reset_index()
+
+    return results['Scores']
+
+
+'''def pyrankVote(dataframe):
     labels = dataframe['Features']
     candidates = []
     dataframe = dataframe.loc[:, dataframe.columns != 'Features']
@@ -65,14 +73,15 @@ def pyrankVote(dataframe):
     election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
     print(election_result)
     return election_result
-
+'''
 
 def getRanks(values, labels):
     zipped = list(zip(labels, values))
 
-    data = pd.DataFrame(data = zipped, columns=['Features', 'Scores'])
+    data = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
     data.sort_values(by='Scores', axis=0, ascending=False, inplace=True, kind='quicksort')
     return data['Features'].tolist()
+
 
 def process_data(data, k):
     st = [col for col in data.columns if col.endswith('_st')]
@@ -87,6 +96,7 @@ def process_data(data, k):
     data.pop('pm25_int')
     return data
 
+
 """
     for col in st:
         data = increase_data(data, col, k)
@@ -95,11 +105,6 @@ def process_data(data, k):
         if(col in ['pm25_int', 'nox_int', 'no2_int']):
             data.pop(col)
 """
-
-
-
-
-
 
 
 def increase_data(data, sensor, k):
@@ -118,8 +123,9 @@ def add_buffer(points, data, uncleaned_data, k, sensor):
         dist, idx = btree.query(cell, k)
 
         for i in range(0, k):
-            uncleaned_data.at[idx[i], sensor+'_st'] = uncleaned_data.loc[idx[i]][sensor+'_int']
+            uncleaned_data.at[idx[i], sensor + '_st'] = uncleaned_data.loc[idx[i]][sensor + '_int']
     return uncleaned_data
+
 
 # Not used
 def NormalizeData(data):
@@ -161,7 +167,7 @@ def show_bars(labels_list, matrix, method, geopackages):
         titles.append(g)
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
-        labels=labels_list[index]
+        labels = labels_list[index]
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_yaxes(row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
@@ -177,7 +183,7 @@ def show_bars_log(labels_list, matrix, method, geopackages):
         titles.append(g)
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
-        labels=labels_list[index]
+        labels = labels_list[index]
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_yaxes(type="log", row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
@@ -193,8 +199,9 @@ def show_bar_log(labels, scores, name):
     fig.update_layout(title_text=name)
     fig.show()
 
+
 def getTitle_gpkg(string):
-   return string[11:13] + '/' + string[9:11] + ' - ' + string[16:18] + '/' + string[14:16] + ' (' + string[19:23] + ')'
+    return string[11:13] + '/' + string[9:11] + ' - ' + string[16:18] + '/' + string[14:16] + ' (' + string[19:23] + ')'
 
 
 def barPlot_func_onedata(values, plot_name):
@@ -431,7 +438,7 @@ def compute_dispersion_ratio(X):
 
 def variance_threshold(data, th):
     # define thresholds to check
-    #thresholds = arange(0.0, 0.55, 0.05)
+    # thresholds = arange(0.0, 0.55, 0.05)
     # apply transform with each threshold
     selector = VarianceThreshold(threshold=th)
     selector.fit_transform(data)
@@ -547,7 +554,6 @@ def evaluate_model(model, X1, y1):
 
 
 def mgwr_beta(data, target, iterations, geopackage):
-
     warnings.filterwarnings(action='ignore', category=LinAlgWarning, module='mgwr')
     warnings.filterwarnings("ignore")
 
@@ -566,7 +572,6 @@ def mgwr_beta(data, target, iterations, geopackage):
     X = (X - X.mean(axis=0)) / X.std(axis=0)
     Y = Y.reshape((-1, 1))
     Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
-
 
     sel = Sel_BW(coords, Y, X, multi=True, kernel='gaussian', spherical=True, fixed=True)
     n_proc = 2
