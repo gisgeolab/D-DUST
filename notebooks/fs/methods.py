@@ -161,13 +161,21 @@ def show_bar(labels, scores, name):
     fig.show()
 
 
-def show_bars(labels_list, matrix, method, geopackages):
+def show_bars(labels_list, matrix, method, geopackages, order):
+
     titles = []
     for g in geopackages:
         titles.append(g)
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
         labels = labels_list[index]
+        if (order == 'Scores'):
+            zipped = list(zip(list(labels), list(values)))
+            temp = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
+            temp.sort_values(by='Scores', axis=0, ascending=False, inplace=True, kind='quicksort')
+            values = temp['Scores'].to_numpy()
+            labels = temp['Features']
+
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_yaxes(row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
@@ -177,13 +185,22 @@ def show_bars(labels_list, matrix, method, geopackages):
     fig.show()
 
 
-def show_bars_log(labels_list, matrix, method, geopackages):
+def show_bars_log(labels_list, matrix, method, geopackages, order):
     titles = []
+
     for g in geopackages:
         titles.append(g)
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
         labels = labels_list[index]
+
+        if (order == 'Scores'):
+            zipped = list(zip(list(labels), list(values)))
+            temp = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
+            temp.sort_values(by='Scores', axis=0, ascending=False, inplace=True, kind='quicksort')
+            values = temp['Scores'].to_numpy()
+            labels = temp['Features']
+
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_yaxes(type="log", row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
@@ -410,9 +427,9 @@ def fs_results_computation(X, Y):
     model.fit(X, Y)
     # get importance
     results['RF Importance'] = model.feature_importances_
-
-    # results['Betas Median (MGWR)'] = mgwr_results(X, Y, 10, coords)
-
+    
+    #Recursive Feature Selection
+    results['RFS']= borda_voting(recursive_feature_selection(X, Y.astype(int), 20))
     return results
 
 
@@ -532,7 +549,6 @@ def recursive_feature_selection(X, y, select):
 
     results = pd.DataFrame()
     results['Features'] = labels
-    results['isSelected'] = rfe.support_
     results['Ranking'] = rfe.ranking_
     return results
 
