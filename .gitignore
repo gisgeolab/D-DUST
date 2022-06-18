@@ -2,7 +2,6 @@
 notebooks/.idea
 notebooks/.ipynb_checkpoints
 notebooks/.DS_Store
-.DS_Store
 notebooks/mypackage/__pycache__
 notebooks/features_0_01
 notebooks/features_0_1
