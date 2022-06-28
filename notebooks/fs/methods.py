@@ -83,10 +83,10 @@ def getRanks(values, labels):
     return data['Features'].tolist()
 
 
-def process_data(data, k):
+def process_data(data, k, sensor):
     st = [col for col in data.columns if col.endswith('_st')]
     interpolated = [col for col in data.columns if col.endswith('_int')]
-    data = increase_data(data, 'pm25_st', k)
+    data = increase_data(data, sensor, k)
     data.pop('dusaf')
     data.pop('siarl')
     data.pop('top')
@@ -94,6 +94,9 @@ def process_data(data, k):
     data.pop('right')
     data.pop('left')
     data.pop('pm25_int')
+    data.pop('aq_zone')
+    data.pop('clim_zone')
+
     return data
 
 
