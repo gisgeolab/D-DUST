@@ -15,3 +15,20 @@ These notebooks are used to require data (e.g. from API services), perform data 
 ---
 ### Data processing
 - [Data processing](https://github.com/opengeolab/D-DUST/blob/WP2/grid_processing.ipynb) : this notebook allows to calculate the required statistic for each variable in each cell, using the data previously prepared and downloaded (for example, the mean value for pollutants in each cell over the time range or the density of population in each cell).
+
+---
+
+## Setting up the environment
+
+It is possible to set up an environment using Anaconda. Open Anaconda terminal to create the environment called `ddust` and type: <br>
+`conda create -n ddust`
+
+Then is possible to activate the environment previously created: <br>
+`conda activate ddust`
+
+Install the necessary libraries to run the notebooks:<br>
+`conda install -c conda-forge rasterio geopandas geemap xarray rioxarray rasterstats`
+
+It is also required to install `cdsapi` to access Copernicus data and `sodapy` to access ARPA API: <br>
+`pip install cdsapi`<br>
+`pip install sodapy`
