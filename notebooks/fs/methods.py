@@ -83,18 +83,25 @@ def getRanks(values, labels):
     return data['Features'].tolist()
 
 
-def process_data(data, k, sensor):
+def process_data(data, k, sensor, NO_MOUNTAINS):
     st = [col for col in data.columns if col.endswith('_st')]
     interpolated = [col for col in data.columns if col.endswith('_int')]
     data = increase_data(data, sensor, k)
     data.pop('dusaf')
     data.pop('siarl')
     data.pop('top')
+    data.pop('soil')
+    data.pop('soil_text')
     data.pop('bottom')
     data.pop('right')
     data.pop('left')
     data.pop('pm25_int')
     data.pop('aq_zone')
+    data.pop('wind_dir_st')
+
+    if(NO_MOUNTAINS == True):
+        data = data[data['clim_zone'] > 3]
+
     data.pop('clim_zone')
 
     return data
@@ -296,7 +303,7 @@ def pearson(X, Y):
     labels = list(X.columns)
     pearson = []
     for (columnName, columnData) in X.iteritems():
-        pearson.append(scipy.stats.pearsonr(columnData, Y)[0])
+        pearson.append(abs(scipy.stats.pearsonr(columnData, Y)[0]))
 
     results = pd.DataFrame()
     results['Scores'] = pearson
@@ -312,7 +319,7 @@ def spearmanr(X, Y):
 
     spearmanr = []
     for (columnName, columnData) in X.iteritems():
-        spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
+        spearmanr.append(abs(scipy.stats.spearmanr(columnData, Y)[0]))
 
     results = pd.DataFrame()
     results['Scores'] = spearmanr
@@ -327,7 +334,7 @@ def kendall(X, Y):
 
     kendall = []
     for (columnName, columnData) in X.iteritems():
-        kendall.append(scipy.stats.kendalltau(columnData, Y)[0])
+        kendall.append(abs(scipy.stats.kendalltau(columnData, Y)[0]))
 
     results = pd.DataFrame()
     results['Scores'] = kendall
