@@ -32,20 +32,87 @@ import plotly.graph_objects as go
 import plotly.express as px
 import warnings
 from scipy.linalg import LinAlgWarning
+import borda.count
 
 
-def process_data(data, k):
+def borda_voting(dataframe):
+    labels = dataframe['Features']
+    dataframe_new = dataframe.loc[:, dataframe.columns != 'Features']
+
+    selection = borda.count.Election()
+    selection.set_candidates(labels.tolist())
+    for col in dataframe_new.columns:
+        method_ranking = getRanks(dataframe_new[col].tolist(), labels)
+        voter = borda.count.Voter(selection, col)
+        voter.votes(method_ranking)
+
+    zipped = list(zip(list(selection.votes), list(selection.votes.values())))
+
+    results = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
+
+    results = results.set_index('Features')
+    results = results.reindex(index=dataframe['Features'])
+    results = results.reset_index()
+
+    return results['Scores']
+
+
+'''def pyrankVote(dataframe):
+    labels = dataframe['Features']
+    candidates = []
+    dataframe = dataframe.loc[:, dataframe.columns != 'Features']
+
+    for candidate in labels:
+        candidates.append(Candidate(candidate))
+
+    ballots = []
+    for col in dataframe.columns:
+        method_ranking = getRanks(dataframe[col].tolist(), candidates)
+        ballots.append(Ballot(ranked_candidates=method_ranking))
+
+    election_result = pyrankvote.instant_runoff_voting(candidates, ballots)
+    print(election_result)
+    return election_result
+'''
+
+def getRanks(values, labels):
+    zipped = list(zip(labels, values))
+
+    data = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
+    data.sort_values(by='Scores', axis=0, ascending=False, inplace=True, kind='quicksort')
+    return data['Features'].tolist()
+
+
+def process_data(data, k, sensor, NO_MOUNTAINS):
     st = [col for col in data.columns if col.endswith('_st')]
     interpolated = [col for col in data.columns if col.endswith('_int')]
-    data = increase_data(data, 'pm25_st', k)
+    data = increase_data(data, sensor, k)
     data.pop('dusaf')
     data.pop('siarl')
     data.pop('top')
+    data.pop('soil')
+    data.pop('soil_text')
     data.pop('bottom')
     data.pop('right')
     data.pop('left')
-    data.pop('pm25_int')
+    
+    data.pop('aq_zone')
+    data.pop('wind_dir_st')
+    
+    if(sensor == 'pm25_st'):
+        data.pop('pm25_int')
+    
+    if(sensor == 'nh3_st'):
+        data.pop('nh3_int')
+
+
+    if(NO_MOUNTAINS == True):
+        data = data[data['clim_zone'] > 3]
+
+    data.pop('clim_zone')
+
     return data
+
 
 """
     for col in st:
@@ -55,11 +122,6 @@ def process_data(data, k):
         if(col in ['pm25_int', 'nox_int', 'no2_int']):
             data.pop(col)
 """
-
-
-
-
-
 
 
 def increase_data(data, sensor, k):
@@ -78,8 +140,9 @@ def add_buffer(points, data, uncleaned_data, k, sensor):
         dist, idx = btree.query(cell, k)
 
         for i in range(0, k):
-            uncleaned_data.at[idx[i], sensor+'_st'] = uncleaned_data.loc[idx[i]][sensor+'_int']
+            uncleaned_data.at[idx[i], sensor + '_st'] = uncleaned_data.loc[idx[i]][sensor + '_int']
     return uncleaned_data
+
 
 # Not used
 def NormalizeData(data):
@@ -115,13 +178,21 @@ def show_bar(labels, scores, name):
     fig.show()
 
 
-def show_bars(labels_list, matrix, method, geopackages):
+def show_bars(labels_list, matrix, method, geopackages, order):
+
     titles = []
     for g in geopackages:
         titles.append(g)
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
-        labels=labels_list[index]
+        labels = labels_list[index]
+        if (order == 'Scores'):
+            zipped = list(zip(list(labels), list(values)))
+            temp = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
+            temp.sort_values(by='Scores', axis=0, ascending=False, inplace=True, kind='quicksort')
+            values = temp['Scores'].to_numpy()
+            labels = temp['Features']
+
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_yaxes(row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
@@ -131,13 +202,22 @@ def show_bars(labels_list, matrix, method, geopackages):
     fig.show()
 
 
-def show_bars_log(labels_list, matrix, method, geopackages):
+def show_bars_log(labels_list, matrix, method, geopackages, order):
     titles = []
+
     for g in geopackages:
         titles.append(g)
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
-        labels=labels_list[index]
+        labels = labels_list[index]
+
+        if (order == 'Scores'):
+            zipped = list(zip(list(labels), list(values)))
+            temp = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
+            temp.sort_values(by='Scores', axis=0, ascending=False, inplace=True, kind='quicksort')
+            values = temp['Scores'].to_numpy()
+            labels = temp['Features']
+
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_yaxes(type="log", row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
@@ -153,8 +233,9 @@ def show_bar_log(labels, scores, name):
     fig.update_layout(title_text=name)
     fig.show()
 
+
 def getTitle_gpkg(string):
-   return string[11:13] + '/' + string[9:11] + ' - ' + string[16:18] + '/' + string[14:16] + ' (' + string[19:23] + ')'
+    return string[11:13] + '/' + string[9:11] + ' - ' + string[16:18] + '/' + string[14:16] + ' (' + string[19:23] + ')'
 
 
 def barPlot_func_onedata(values, plot_name):
@@ -229,7 +310,7 @@ def pearson(X, Y):
     labels = list(X.columns)
     pearson = []
     for (columnName, columnData) in X.iteritems():
-        pearson.append(scipy.stats.pearsonr(columnData, Y)[0])
+        pearson.append(abs(scipy.stats.pearsonr(columnData, Y)[0]))
 
     results = pd.DataFrame()
     results['Scores'] = pearson
@@ -245,7 +326,7 @@ def spearmanr(X, Y):
 
     spearmanr = []
     for (columnName, columnData) in X.iteritems():
-        spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
+        spearmanr.append(abs(scipy.stats.spearmanr(columnData, Y)[0]))
 
     results = pd.DataFrame()
     results['Scores'] = spearmanr
@@ -260,7 +341,7 @@ def kendall(X, Y):
 
     kendall = []
     for (columnName, columnData) in X.iteritems():
-        kendall.append(scipy.stats.kendalltau(columnData, Y)[0])
+        kendall.append(abs(scipy.stats.kendalltau(columnData, Y)[0]))
 
     results = pd.DataFrame()
     results['Scores'] = kendall
@@ -363,9 +444,9 @@ def fs_results_computation(X, Y):
     model.fit(X, Y)
     # get importance
     results['RF Importance'] = model.feature_importances_
-
-    # results['Betas Median (MGWR)'] = mgwr_results(X, Y, 10, coords)
-
+    
+    #Recursive Feature Selection
+    results['RFS']= borda_voting(recursive_feature_selection(X, Y.astype(int), 20))
     return results
 
 
@@ -391,7 +472,7 @@ def compute_dispersion_ratio(X):
 
 def variance_threshold(data, th):
     # define thresholds to check
-    #thresholds = arange(0.0, 0.55, 0.05)
+    # thresholds = arange(0.0, 0.55, 0.05)
     # apply transform with each threshold
     selector = VarianceThreshold(threshold=th)
     selector.fit_transform(data)
@@ -485,7 +566,6 @@ def recursive_feature_selection(X, y, select):
 
     results = pd.DataFrame()
     results['Features'] = labels
-    results['isSelected'] = rfe.support_
     results['Ranking'] = rfe.ranking_
     return results
 
@@ -507,7 +587,6 @@ def evaluate_model(model, X1, y1):
 
 
 def mgwr_beta(data, target, iterations, geopackage):
-
     warnings.filterwarnings(action='ignore', category=LinAlgWarning, module='mgwr')
     warnings.filterwarnings("ignore")
 
@@ -526,7 +605,6 @@ def mgwr_beta(data, target, iterations, geopackage):
     X = (X - X.mean(axis=0)) / X.std(axis=0)
     Y = Y.reshape((-1, 1))
     Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
-
 
     sel = Sel_BW(coords, Y, X, multi=True, kernel='gaussian', spherical=True, fixed=True)
     n_proc = 2

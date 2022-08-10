@@ -95,9 +95,16 @@ def process_data(data, k, sensor, NO_MOUNTAINS):
     data.pop('bottom')
     data.pop('right')
     data.pop('left')
-    data.pop('pm25_int')
+    
     data.pop('aq_zone')
     data.pop('wind_dir_st')
+    
+    if(sensor == 'pm25_st'):
+        data.pop('pm25_int')
+    
+    if(sensor == 'nh3_st'):
+        data.pop('nh3_int')
+
 
     if(NO_MOUNTAINS == True):
         data = data[data['clim_zone'] > 3]
