@@ -409,19 +409,19 @@ def fs_results_computation(X, Y):
     # Pearson index computation
     pearson = []
     for (columnName, columnData) in X.iteritems():
-        pearson.append(scipy.stats.pearsonr(columnData, Y)[0])
+        pearson.append(abs(scipy.stats.pearsonr(columnData, Y)[0]))
     results['Pearson'] = pearson
 
     # Spearmnar index computation
     spearmanr = []
     for (columnName, columnData) in X.iteritems():
-        spearmanr.append(scipy.stats.spearmanr(columnData, Y)[0])
+        spearmanr.append(abs(scipy.stats.spearmanr(columnData, Y)[0]))
     results['Spearmanr'] = spearmanr
 
     # Kendall tau computation
     kendall = []
     for (columnName, columnData) in X.iteritems():
-        kendall.append(scipy.stats.kendalltau(columnData, Y)[0])
+        kendall.append(abs(scipy.stats.kendalltau(columnData, Y)[0]))
     results['Kendall'] = kendall
 
     # Fisher's score computation
