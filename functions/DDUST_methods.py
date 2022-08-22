@@ -13,39 +13,6 @@ def select_grid(grid):
     }
     return switcher.get(grid, "Invalid grid")
 
-
-def manuring_periods(year, custom_w):
-    """
-    Function used to select the time range for the processing and 
-    visualize the calendar with the corresponding selected week.
-    """
-
-    import datetime
-    from collections import defaultdict
-    import pandas as pd
-    import numpy as np
-    from plotly_calplot import calplot
-    date = datetime.date(year, 1, 1)
-    enddate = datetime.date(year, 12, 31)
-    weeks = defaultdict(list)
-    custom_week_start = datetime.datetime.strptime((str(year)+'-'+custom_w[0]), "%Y-%m-%d").date()
-    custom_week_end = datetime.datetime.strptime((str(year)+'-'+custom_w[1]), "%Y-%m-%d").date()
-    all_dates = []
-    while date < enddate:
-        date += datetime.timedelta(days=1)
-        if date >= custom_week_start and date <= custom_week_end:
-            all_dates.append(date.strftime("%Y-%m-%d"))
-    dictionary = dict(weeks)
-    calendar = dict(dictionary)
-    all_dates = pd.DataFrame(pd.Series(all_dates),columns=['date'])
-    all_dates.date = pd.to_datetime(all_dates.date)
-    all_dates['value'] = 1
-    # creating the plot
-    fig = calplot(all_dates, x="date", y="value")
-    fig.show()
-    return calendar
-
-
 def AQ_sensor(year):
     """
     Function for selecting the correct link for downloading zipped .csv air quality data from ARPA sensors
@@ -58,7 +25,6 @@ def AQ_sensor(year):
         '2017': "https://www.dati.lombardia.it/download/fdv6-2rbs/application%2Fzip"
     }
     return switcher.get(year, "Invalid year. For current year data use the API request.")
-
 
 def meteo_sensor(year):
     """
