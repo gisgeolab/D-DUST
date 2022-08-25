@@ -83,7 +83,7 @@ def getRanks(values, labels):
     return data['Features'].tolist()
 
 
-def process_data(data, k, sensor, NO_MOUNTAINS):
+def process_data(data, k, sensor):
     st = [col for col in data.columns if col.endswith('_st')]
     interpolated = [col for col in data.columns if col.endswith('_int')]
     data = increase_data(data, sensor, k)
@@ -95,21 +95,10 @@ def process_data(data, k, sensor, NO_MOUNTAINS):
     data.pop('bottom')
     data.pop('right')
     data.pop('left')
-    
+    data.pop('area')
     data.pop('aq_zone')
     data.pop('wind_dir_st')
-    
-    if(sensor == 'pm25_st'):
-        data.pop('pm25_int')
-    
-    if(sensor == 'nh3_st'):
-        data.pop('nh3_int')
-
-
-    if(NO_MOUNTAINS == True):
-        data = data[data['clim_zone'] > 3]
-
-    data.pop('clim_zone')
+    data.pop(sensor[: -2]+'int')
 
     return data
 
