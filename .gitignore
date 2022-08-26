@@ -14,3 +14,6 @@ notebooks/assets/features_0_1
 notebooks/assets/features_0_01
 notebooks/test
 .DS_Store
+.DS_Store
+notebooks/assets/.DS_Store
+*.pyc
