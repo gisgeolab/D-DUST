@@ -71,7 +71,7 @@ def process_data(data, k, sensor):
 
 def increase_data(data, sensor, k):
     points_st = data[~data[sensor].isnull()]
-    return add_buffer(points_st, data, data, k, sensor[:-3])
+    return add_buffer(points_st, data, data, k, sensor)
 
 
 def add_buffer(points, data, uncleaned_data, k, sensor):
@@ -85,7 +85,7 @@ def add_buffer(points, data, uncleaned_data, k, sensor):
         dist, idx = btree.query(cell, k)
 
         for i in range(0, k):
-            uncleaned_data.at[idx[i], sensor + '_st'] = uncleaned_data.loc[idx[i]][sensor + '_int']
+            uncleaned_data.at[idx[i], sensor] = uncleaned_data.loc[idx[i]][sensor]
     return uncleaned_data
 
 # It normalized 1D array with MinMaxscaler
