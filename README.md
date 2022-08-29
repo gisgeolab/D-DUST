@@ -3,7 +3,7 @@ In this branch you can find each tool used for the *feature selection* and *ML m
 
 
 ## Feature Selection
-In order to evaluate a weighted score for each variable [this notebook](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/fs_results.ipynb) was implemented.
+In order to evaluate a weighted score for each variable [this interactive notebook](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/fs_results.ipynb) is implemented.
 
 ## ML Models
 The results of the feature selection (which are in the folder [assets/fs_results](https://github.com/opengeolab/D-DUST/tree/thesis_MB/notebooks/assets/fs_results)) are used for building 2 models:
