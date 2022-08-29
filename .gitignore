@@ -6,12 +6,10 @@ notebooks/mypackage/__pycache__
 notebooks/features_0_01
 notebooks/features_0_1
 .pyc
-notebooks/assets/fs_results
 notebooks/fs/.ipynb_checkpoints
 notebooks/fs/__pycache__
 *.pyc
-notebooks/assets/features_0_1
-notebooks/assets/features_0_01
+
 notebooks/test
 .DS_Store
 .DS_Store
