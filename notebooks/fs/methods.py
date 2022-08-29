@@ -230,7 +230,7 @@ def fs_results_computation(X, Y):
     results['RF Importance'] = model.feature_importances_
     
     #Recursive Feature Selection
-    results['RFS']= borda_voting(recursive_feature_selection(X, Y.astype(int), 20))
+    results['RFS']= recursive_feature_selection(X, Y.astype(int), 20)
     return results
 
 
@@ -311,6 +311,16 @@ def recursive_feature_selection(X, y, select):
 
     results = pd.DataFrame()
     results['Features'] = labels
-    results['Ranking'] = rfe.ranking_
-    return results
+    
+    support = rfe.support_
+    
+    res = []
+    for s in support:
+            if(s == True):
+                res.append(1)
+            else:
+                res.append(0)
+    
+    results['Ranking'] = res
+    return results['Ranking']
 
