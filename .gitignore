@@ -9,7 +9,8 @@ notebooks/features_0_1
 notebooks/fs/.ipynb_checkpoints
 notebooks/fs/__pycache__
 *.pyc
-notebooks/__pycache__
+notebooks/fs/__pycache__
+notebooks/fs/.ipynb_checkpoints
 notebooks/test
 .DS_Store
 .DS_Store
