@@ -13,6 +13,7 @@ The results of the feature selection (which are in the folder [assets/fs_results
 
 Results of ML models already computed can be view in this [notebook](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/model.ipynb), by selecting the model, period and configuration.
 
+
 An overview of how input and output of the different notebooks are taken is displayed.
 </br>
 </br>
