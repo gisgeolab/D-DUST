@@ -88,6 +88,7 @@ def add_buffer(points, data, uncleaned_data, k, sensor):
         for i in range(0, k):
             uncleaned_data.at[idx[i], sensor] = uncleaned_data.loc[idx[i]][sensor[:-2] + 'int']
     return uncleaned_data
+
 # It normalized 1D array with MinMaxscaler
 def NormalizeData1D(data):
     data = np.array(data).reshape(-1, 1)
@@ -107,13 +108,6 @@ def columnNotNull(array):
         if (i == True):
             return True
     return False
-
-
-def show_bar(labels, scores, name):
-    df = pd.DataFrame(list(zip(labels, scores)), columns=['Features', 'Scores'])
-    fig = px.bar(df, x="Features", y="Scores", color="Scores")
-    fig.update_layout(title_text=name)
-    fig.show()
 
 
 def show_bars(labels_list, matrix, method, geopackages, order):
@@ -163,17 +157,6 @@ def show_bars_log(labels_list, matrix, method, geopackages, order):
     fig.update_layout(height=1000, title_text=method)
     fig.update_layout(showlegend=False, autosize=True)
     fig.show()
-
-
-def show_bar_log(labels, scores, name):
-    df = pd.DataFrame(list(zip(labels, scores)), columns=['Features', 'Scores'])
-    fig = px.bar(df, x="Features", y="Scores", color="Scores", log_y=True)
-    fig.update_layout(title_text=name)
-    fig.show()
-
-
-def getTitle_gpkg(string):
-    return string[11:13] + '/' + string[9:11] + ' - ' + string[16:18] + '/' + string[14:16] + ' (' + string[19:23] + ')'
 
 # method which returns labels of features which have no nan values
 def check_NotNull(df):
@@ -233,7 +216,6 @@ def fs_results_computation(X, Y):
     results['RFS']= recursive_feature_selection(X, Y.astype(int), 20)
     return results
 
-
 def variance_threshold(data, th):
     # define thresholds to check
     # thresholds = arange(0.0, 0.55, 0.05)
@@ -254,50 +236,6 @@ def variance_threshold(data, th):
     results['Scores'] = scores
 
     return results
-
-
-def exhaustive_feature_selection(X, y):
-    labels = list(X.columns)
-
-    warnings.filterwarnings("ignore")
-
-    X = X.to_numpy()
-    y = y.astype(int)
-    lr = LinearRegression()
-
-    efs1 = EFS(lr,
-               min_features=10,
-               max_features=20,
-               scoring='mae',
-               n_jobs=-1,
-               cv=5)
-
-    efs1.fit(X, y)
-    print('Best accuracy score: %.2f' % efs1.best_score_)
-    print('Best subset (indices):', efs1.best_idx_)
-    print('Best subset (corresponding names):')
-    for i in efs1.best_idx_:
-        print(labels[i])
-
-    df = pd.DataFrame.from_dict(efs1.get_metric_dict()).T
-    df.sort_values('avg_score', inplace=True, ascending=False)
-    for i in efs1.best_idx_:
-        print(labels[i])
-
-    return df
-
-
-def detect_n_feature_RFE(X, y):
-    X = X.to_numpy()
-    # create pipeline
-    rfe = RFECV(estimator=DecisionTreeClassifier())
-    model = DecisionTreeClassifier()
-    pipeline = Pipeline(steps=[('s', rfe), ('m', model)])  # evaluate model
-    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
-    n_scores = cross_val_score(pipeline, X, y, scoring='accuracy', cv=cv, n_jobs=-1)
-    # report performance
-    print('Accuracy: %.3f (%.3f)' % (statistics.mean(n_scores), std(n_scores)))
-
 
 def recursive_feature_selection(X, y, select):
     labels = list(X.columns)
