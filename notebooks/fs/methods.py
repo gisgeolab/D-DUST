@@ -324,3 +324,10 @@ def recursive_feature_selection(X, y, select):
     results['Ranking'] = res
     return results['Ranking']
 
+def set_labels_df(dictionary, keys):
+    labels = dictionary[keys[0]]['Features'].tolist()
+    for k in keys:
+        if (len(dictionary[k]['Features'].tolist()) > len(labels)):
+            labels = dictionary[k]['Features'].tolist()
+
+    return labels
