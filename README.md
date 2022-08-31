@@ -11,3 +11,5 @@ The results of the feature selection (which are in the folder [assets/fs_results
 - *[Random Forest prediction model](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/RandomForest_prediction_model.ipynb)*: Prediction model based on Random Forest regression;
 
 Results of ML models already computed can be view in this [notebook](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/model.ipynb), by selecting the model, period and configuration.
+
+<img align="right" width="230" height="400" src = assets/images/overview.png>
