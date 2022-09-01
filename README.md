@@ -17,4 +17,4 @@ Results of ML models already computed can be view in this [notebook](https://git
 An overview of how input and output of the different notebooks are used is displayed.
 </br>
 </br>
-<img width="700" src = notebooks/assets/images/overview.png>
+<img width="1200" src = notebooks/assets/images/overview.png>
