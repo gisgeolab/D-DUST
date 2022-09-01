@@ -1,3 +1,7 @@
+'''''
+This file contain each method imported by the notebook in this repository. Each one of them is explained through docstring documentation.
+If a method is marked with [GENERAL] it means that can be used generally for other cases of study
+   '''''
 from plotly.subplots import make_subplots
 import scipy.stats
 import pandas as pd
@@ -13,7 +17,7 @@ import warnings
 import borda.count
 
 def borda_voting(dataframe):
-    """
+    """ [GENERAL]
     :param dataframe: Results where each column represent score obtained by each method
     :return: return a Series() containing the Borda Count score
     """
@@ -36,7 +40,7 @@ def borda_voting(dataframe):
     return results['Scores']
 
 def getRanks(values, labels):
-    """
+    """   [GENERAL]
 
     :param values:list of the scores of each label
     :param labels:list of the labels
@@ -50,7 +54,7 @@ def getRanks(values, labels):
 
 
 def process_data(data, k, sensor):
-    """
+    """  [GENERAL]
 
     :param data: Dataset
     :param k: number of neighbours for knn
@@ -76,7 +80,7 @@ def process_data(data, k, sensor):
 
 
 def increase_data(data, sensor, k):
-    """
+    """  [GENERAL]
 
    :param data: Dataset
     :param k: number of neighbours for knn
@@ -89,7 +93,7 @@ def increase_data(data, sensor, k):
 
 
 def add_buffer(points, data, uncleaned_data, k, sensor):
-    """
+    """    [GENERAL]
 
     :param points: dataset where sensor variable is not null
     :param data: dataset
@@ -112,7 +116,7 @@ def add_buffer(points, data, uncleaned_data, k, sensor):
     return uncleaned_data
 
 def NormalizeData1D(data):
-    """
+    """   [GENERAL]
 
     :param data: Series() of a scores
     :return: Array of normalized score
@@ -188,7 +192,7 @@ def show_bars_log(labels_list, matrix, method, geopackages, order):
     fig.show()
 
 def fs_results_computation(X, Y):
-    """
+    """ [GENERAL]
 
     :param X: Dataframe of independent variables
     :param Y: array of the target variable
@@ -239,7 +243,7 @@ def fs_results_computation(X, Y):
     return results
 
 def variance_threshold(data, th):
-    """
+    """ [GENERAL]
 
     :param data:  Dataset
     :param th: threshold value used for VarianceThreshold
@@ -261,7 +265,7 @@ def variance_threshold(data, th):
     return results
 
 def recursive_feature_selection(X, y, select):
-    """
+    """[GENERAL]
 
     :param X: Dataframe of independent variables
     :param Y: array of the target variable
