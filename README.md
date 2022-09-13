@@ -20,15 +20,33 @@ These notebooks are used to require data (e.g. from API services), perform data 
 
 ## Setting up the environment
 
-It is possible to set up an environment using Anaconda. Open Anaconda terminal to create the environment called `ddust` and type: <br>
-`conda create -n ddust`
+It is possible to set up an environment using Anaconda. Open Anaconda terminal to create an environment called `ddust`. To do this type: <br>
+- `conda create -n ddust`
 
-Then is possible to activate the environment previously created: <br>
-`conda activate ddust`
+Now activate the environment previously created: <br>
+- `conda activate ddust`
 
-Install the necessary libraries to run the notebooks:<br>
-`conda install -c conda-forge rasterio geopandas geemap xarray rioxarray rasterstats`
+Install the necessary libraries required to run the notebooks for downloading the data and grid them:<br>
+- `conda install -c conda-forge rasterio geopandas geemap xarray rioxarray rasterstats`
 
-It is also required to install `cdsapi` to access Copernicus data and `sodapy` to access ARPA API: <br>
-`pip install cdsapi`<br>
-`pip install sodapy`
+Finally, it is also required to install `cdsapi` to access Copernicus data and `sodapy` to access ARPA API: <br>
+- `pip install cdsapi`<br>
+- `pip install sodapy`
+
+---
+
+### Repository structure
+
+```bash
+root/ 
+├── functions/                                    # Folder containing D-DUST functions
+│   ├── DDUST_methods.py                          # DDUST functions
+├── LICENSE                                       # FIX THIS AT THE END
+├── README.md                                     # Readme file
+├── environment.yml                               # Environment file
+├── date.json                                     # JSON file used to define processing time range
+├── Date selection.ipynb                          # Jupyter Notebook for selecting best time ranges
+├── Grid Processing.ipynb                         # Jupyter Notebook for grid processing
+├── Model Variables Request.ipynb                 # Jupyter Notebook for requesting model data
+├── Satellite Variables Request.ipynb             # Jupyter Notebook for requesting satellite data
+└── Ground Sensor Variables Request.ipynb         # Jupyter Notebook for requesting ground sensor data
