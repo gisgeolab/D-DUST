@@ -2,7 +2,7 @@
 ---
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/opengeolab/D-DUST.git/WP2)
 
-WP2 of the D-DUST project focuses on the implementation of the data repository for the D-DUST project. The following notebooks have been developed for data preparation and preprocessing.
+The WP2 of the D-DUST project focuses on the implementation of the data repository for the D-DUST project. The following notebooks have been developed for data preparation and preprocessing.
 
 ## Notebooks description
 ---
