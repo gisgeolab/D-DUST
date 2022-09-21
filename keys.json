@@ -1,5 +1,5 @@
 {
 	"ATM_ID": "https://ads.atmosphere.copernicus.eu/api/v2",
-	"ATM_KEY": "7829:e0d40eca-947c-4eb8-91f5-c5cfbcaa2172",
-	"arpa_token" :"riTLzYVRVdDaQtUkxDDaHRgJi"
+	"ATM_KEY": "add_your_ads_key",
+	"arpa_token" :"add_your_arpa_token"
 }
