@@ -8,7 +8,7 @@
 The WP2 of the D-DUST project focuses on the implementation of the data repository for the D-DUST project. The following notebooks have been developed for data preparation and preprocessing.
 
 ## Notebooks description
----
+
 ### Data request and preparation
 These notebooks are used to require data (e.g. from API services), perform data preparation for following phases and export these data with an appropriate format.
 - [**Model Variables Request Notebook**](https://github.com/opengeolab/D-DUST/blob/WP2/Model%20Variables%20Request.ipynb): access modelled air quality data from the [Copernicus Atmosphere Monitoring Service](https://atmosphere.copernicus.eu/data) API and allows to export them as NetCDF files. It also requests [Copernicus Climate Change Service](https://climate.copernicus.eu/) meteorological data using Google Earth Engine API (using also [geemap](https://geemap.org/) library), downloading them in .tif format. These are used as input in the grid processing notebook.
