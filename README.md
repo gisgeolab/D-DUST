@@ -1,5 +1,5 @@
 # D-DUST Project - WP2
-<img style="margin-right:80px; margin-left:80px" src=img/DDUST__Nero.png width="170"> <img style="margin-right:80px" src=img/01_Polimi_centrato_BN_positivo.png width="170"> <img style="margin-right:80px" src=img/sigillo_testo_colori_300dpi.png width="170"> <img style="margin-right:80px" src=img/fondazione-politecnico-di-milano.png width="170"> <img src=img/ML_FCARIPLO_cmyk__base_100mm.png width="170">
+<img style="margin-right:80px; margin-left:80px" src=img/DDUST__Nero.png width="150"> <img style="margin-right:80px" src=img/01_Polimi_centrato_BN_positivo.png width="150"> <img style="margin-right:80px" src=img/sigillo_testo_colori_300dpi.png width="150"> <img style="margin-right:80px" src=img/fondazione-politecnico-di-milano.png width="150"> <img src=img/ML_FCARIPLO_cmyk__base_100mm.png width="150">
 
 
 ---

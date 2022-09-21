@@ -1,0 +1,5 @@
+{
+	"ATM_ID": "https://ads.atmosphere.copernicus.eu/api/v2",
+	"ATM_KEY": "add_your_cdsapi_key",
+	"arpa_token" :"add_your_arpa_socrata_key"
+}
