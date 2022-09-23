@@ -10,7 +10,7 @@ The D-DUST (Data-driven moDelling of particUlate with Satellite Technology aid) 
 <img src=img/testbed.png width="600"></center>
 </p>
 
-This repository contains the code and the information related to the following Work Packages:
+This repository contains the code and the information related to the following Work Packages, organized in the following branches:
 
 1. [WP2 - Data Packages](https://github.com/gisgeolab/D-DUST/tree/WP2)
     - State-of-the-art air quality and PM monitoring: review paper 
@@ -21,17 +21,22 @@ This repository contains the code and the information related to the following W
 
 ## 1. WP2 - Data Packages
 
-The D-DUST Work Package 2 focuses on the implementation of the project Analysis-ready Data Repository. A better description of the notebooks and the WP2 structures is provided in its [branch](https://github.com/gisgeolab/D-DUST/tree/WP2). Summarizing, the following notebooks have been developed for data preparation and preprocessing:
+> :warning: A better description of the notebooks structure is provided in the **[WP2 branch](https://github.com/gisgeolab/D-DUST/tree/WP2)**.
+
+The D-DUST Work Package 2 focuses on the implementation of the project Analysis-ready Data Repository. Summarizing, the following notebooks have been developed for data preparation and preprocessing:
 
 - [**Model Variables Request Notebook**](https://github.com/opengeolab/D-DUST/blob/WP2/Model%20Variables%20Request.ipynb): this notebook is used to access modelled air quality data.
 - [**Ground Sensor Variables Request**](https://github.com/gisgeolab/D-DUST/blob/WP2/Ground%20Sensor%20Variables%20Request%20.ipynb) : this notebook is used to access data for both meteorological and air quality ground stations.
 - [**Satellite Variables Request**](https://github.com/opengeolab/D-DUST/blob/WP2/Satellite%20Variables%20Request.ipynb): this notebook is used to retrieve satellite observations of atmospheric pollutants.
 - [**Date selection**](https://github.com/opengeolab/D-DUST/blob/WP2/Date%20selection.ipynb): this notebook is used to select low precipitation and high-temperature periods.
 - [**Grid Processing**](https://github.com/gisgeolab/D-DUST/blob/WP2/Grid%20Processing.ipynb): this notebook allows computing summary statistics for each variable in each grid cell.
-
-parte matteo
+- Features Selection (fix)
 
 ## 2. WP4 - Predictive Model Design
+
+> :warning: A better description of the notebooks structure is provided in the **[WP4 branch](https://github.com/gisgeolab/D-DUST/tree/WP4)**.
 The data repository created in the WP2, will be used in the WP4 concerning monitoring and prediction models development.
 
 ---
+
+<ins><b>Authors</b></ins>: <b>*Daniele Oxoli*</b> (daniele.oxoli@polimi.it), <b>*Emanuele Capizzi*</b> (emanuele.capizzi@polimi.it), <b>*Lorenzo Gianquintireri*</b> (lorenzo.gianquintieri@polimi.it), <b>*Matteo Bresciani*</b> (matteo.bresciani@mail.polimi.it) - Politecnico di Milano, 2022.
