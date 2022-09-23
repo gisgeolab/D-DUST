@@ -1,9 +1,10 @@
-# D-DUST Project - WP2
+# D-DUST Project 
+## Work Package 2 - Data Packages
 <img style="margin-right:80px; margin-left:80px" src=img/DDUST__Nero.png width="150"> 
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/opengeolab/D-DUST.git/WP2)
 
-The WP2 of the D-DUST project focuses on the implementation of the Analysis-ready Data Repository for the D-DUST project. The following notebooks have been developed for data preparation and preprocessing.
+The D-DUST Work Package 2 focuses on the implementation of the project Analysis-ready Data Repository. The following notebooks have been developed for data preparation and preprocessing.
 
 ## Notebooks description
 
