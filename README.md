@@ -21,7 +21,7 @@ This repository contains the code and the information related to the following W
 
 ## 1. WP2 - Data Packages
 
-> :warning: A better description of the notebooks structure is provided in the **[WP2 branch](https://github.com/gisgeolab/D-DUST/tree/WP2)**.
+> :warning: More information about the notebooks structure and the considered are provided in the **[WP2 branch](https://github.com/gisgeolab/D-DUST/tree/WP2)**.
 
 The D-DUST Work Package 2 focuses on the implementation of the project Analysis-ready Data Repository. Summarizing, the following notebooks have been developed for data preparation and preprocessing:
 
@@ -34,7 +34,8 @@ The D-DUST Work Package 2 focuses on the implementation of the project Analysis-
 
 ## 2. WP4 - Predictive Model Design
 
-> :warning: A better description of the notebooks structure is provided in the **[WP4 branch](https://github.com/gisgeolab/D-DUST/tree/WP4)**.
+> :warning: More information about the notebooks structure and the considered are provided in the **[WP4 branch](https://github.com/gisgeolab/D-DUST/tree/WP4)**.
+
 The data repository created in the WP2, will be used in the WP4 concerning monitoring and prediction models development.
 
 ---
