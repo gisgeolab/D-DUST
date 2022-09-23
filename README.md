@@ -30,7 +30,9 @@ The D-DUST Work Package 2 focuses on the implementation of the project Analysis-
 - [**Satellite Variables Request**](https://github.com/opengeolab/D-DUST/blob/WP2/Satellite%20Variables%20Request.ipynb): this notebook is used to retrieve satellite observations of atmospheric pollutants.
 - [**Date selection**](https://github.com/opengeolab/D-DUST/blob/WP2/Date%20selection.ipynb): this notebook is used to select low precipitation and high-temperature periods.
 - [**Grid Processing**](https://github.com/gisgeolab/D-DUST/blob/WP2/Grid%20Processing.ipynb): this notebook allows computing summary statistics for each variable in each grid cell.
-- Features Selection (fix)
+- Features Selection: add to WP2 branch. Dashboard created to select relevant features using multiple statistical methods, in order to be used in the next modeling steps. (fix)
+
+Link to Zenodo data
 
 ## 2. WP4 - Predictive Model Design
 
