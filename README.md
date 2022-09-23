@@ -50,7 +50,7 @@ root/
 ├── README.md                                     # Readme file
 ├── environment.yml                               # Environment file
 ├── date.json                                     # JSON file used to define the processing time range
-├── kays.json                                     # JSON file used to store tokens and key for CDSAPI and ARPA Socrata API
+├── keys.json                                     # JSON file used to store tokens and key for CDSAPI and ARPA Socrata API
 ├── Date selection.ipynb                          # Jupyter Notebook for selecting best time ranges
 ├── Grid Processing.ipynb                         # Jupyter Notebook for grid processing
 ├── Model Variables Request.ipynb                 # Jupyter Notebook for requesting model data
