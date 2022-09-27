@@ -1,8 +1,10 @@
 # D-DUST Project (Data-driven moDelling of particUlate with Satellite Technology aid)
 <br>
-<p align="center">
-<img style="margin-right:80px;" src=img/DDUST__Nero.png width="300">
-</p>
+<figure>
+    <p align="center">
+    <img style="margin-right:80px;" src=img/DDUST__Nero.png width="300">
+    </p>
+<figure>
 
 ## Project description
 The D-DUST (Data-driven moDelling of particUlate with Satellite Technology aid) project focuses on the development of new means to improve both understanding and local monitoring of farming-related particulate matter (PM). The project will primarily consider the Po Valley portion belonging to the Lombardy Region as a testbed for the activities.
