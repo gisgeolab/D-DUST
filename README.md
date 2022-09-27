@@ -1,13 +1,16 @@
 # D-DUST Project (Data-driven moDelling of particUlate with Satellite Technology aid)
 <br>
 <p align="center">
-<img style="margin-right:80px;" src=img/DDUST__Nero.png width="300"></center>
+<img style="margin-right:80px;" src=img/DDUST__Nero.png width="300">
 </p>
 
 ## Project description
 The D-DUST (Data-driven moDelling of particUlate with Satellite Technology aid) project focuses on the development of new means to improve both understanding and local monitoring of farming-related particulate matter (PM). The project will primarily consider the Po Valley portion belonging to the Lombardy Region as a testbed for the activities.
+
+improve the description 
 <p align="center">
-<img src=img/testbed.png width="600"></center>
+<img src=img/testbed.png width="600">
+<figcaption>D-DUST testbed - Lombardy region (highlighted in red) and Po Valley (highlighted in black)</figcaption>
 </p>
 
 This repository contains the code and the information related to the following Work Packages, organized in the following branches:
@@ -32,7 +35,7 @@ The D-DUST Work Package 2 focuses on the implementation of the project Analysis-
 - [**Grid Processing**](https://github.com/gisgeolab/D-DUST/blob/WP2/Grid%20Processing.ipynb): this notebook allows computing summary statistics for each variable in each grid cell.
 - Features Selection: add to WP2 branch. Dashboard created to select relevant features using multiple statistical methods, in order to be used in the next modeling steps. (fix)
 
-Link to Zenodo data
+Link to Zenodo data and review paper
 
 ## 2. WP4 - Predictive Model Design
 
