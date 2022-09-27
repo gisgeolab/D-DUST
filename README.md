@@ -9,10 +9,8 @@ The D-DUST (Data-driven moDelling of particUlate with Satellite Technology aid) 
 
 improve the description 
 <figure>
-    <p align="center">
-    <img src=img/testbed.png width="600">
+    <img align="center" src=img/testbed.png width="600">
     <figcaption>D-DUST testbed - Lombardy region (highlighted in red) and Po Valley (highlighted in black)</figcaption>
-    </p>
 </figure>
 
 This repository contains the code and the information related to the following Work Packages, organized in the following branches:
