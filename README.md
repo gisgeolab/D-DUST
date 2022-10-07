@@ -18,3 +18,18 @@ An overview of how input and output of the different notebooks are used is displ
 </br>
 </br>
 <img width="1200" src = notebooks/assets/images/overview.png>
+
+### Structure of folders
+root/ 
+├── functions/                                    # Folder containing D-DUST functions
+│   ├── DDUST_methods.py                          # DDUST functions
+├── LICENSE                                       # FIX THIS AT THE END
+├── README.md                                     # Readme file
+├── environment.yml                               # Environment file
+├── date.json                                     # JSON file used to define the processing time range
+├── keys.json                                     # JSON file used to store tokens and key for CDSAPI and ARPA Socrata API
+├── Date selection.ipynb                          # Jupyter Notebook for selecting best time ranges
+├── Grid Processing.ipynb                         # Jupyter Notebook for grid processing
+├── Model Variables Request.ipynb                 # Jupyter Notebook for requesting model data
+├── Satellite Variables Request.ipynb             # Jupyter Notebook for requesting satellite data
+└── Ground Sensor Variables Request.ipynb         # Jupyter Notebook for requesting ground sensor data
