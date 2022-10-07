@@ -31,8 +31,8 @@ root/
     ├──model.ipynb                                # notebook used for showing results achieved by ML models
     ├──buffer_knn.ipynb                           # notebook used for showing how KNN is performed in order to increase the size of ARPA observation
     ├──fs/                                        # It contains package in which I collect method implemented and used by the notebooks
-    |   ├──methods.py
-    |   ├──_init_.py
+        ├──methods.py
+        ├──_init_.py
     ├──assets/    
         ├──fs_results/                            # It contains the fs results already run and saved in .csv files
         ├──test/                                  # It contains the test results using fs  saved in .csv and .xlsx files        
