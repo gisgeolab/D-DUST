@@ -19,17 +19,25 @@ An overview of how input and output of the different notebooks are used is displ
 </br>
 <img width="1200" src = notebooks/assets/images/overview.png>
 
+
 ### Structure of folders
+```bash
 root/ 
-├── functions/                                    # Folder containing D-DUST functions
-│   ├── DDUST_methods.py                          # DDUST functions
-├── LICENSE                                       # FIX THIS AT THE END
 ├── README.md                                     # Readme file
-├── environment.yml                               # Environment file
-├── date.json                                     # JSON file used to define the processing time range
-├── keys.json                                     # JSON file used to store tokens and key for CDSAPI and ARPA Socrata API
-├── Date selection.ipynb                          # Jupyter Notebook for selecting best time ranges
-├── Grid Processing.ipynb                         # Jupyter Notebook for grid processing
-├── Model Variables Request.ipynb                 # Jupyter Notebook for requesting model data
-├── Satellite Variables Request.ipynb             # Jupyter Notebook for requesting satellite data
-└── Ground Sensor Variables Request.ipynb         # Jupyter Notebook for requesting ground sensor data
+├── notebook/                                     # Folder containing notebooks implemented in my work thesis
+│   ├──fs_results.ipynb                           # notebook used for computing Feature Selection
+│   ├──Keras_prediction_model.ipynb               # notebook used for building Keras Neural Network model for prediction
+│   ├──RandomForest_prediction_model.ipynb        # notebook used for building Random Forest Model for prediction
+│   ├──model.ipynb                                # notebook used for showing results achieved by ML models
+│   ├──buffer_knn.ipynb                           # notebook used for showing how KNN is performed in order to increase the size of ARPA observation
+│   ├──fs/                                        # It contains package in which I collect method implemented and used by the notebooks
+│   |   ├──methods.py
+│   |   ├──_init_.py
+│   ├──assets/    
+|   │   ├──fs_results/                            # It contains the fs results already run and saved in .csv files
+|   │   ├──test/                                  # It contains the test results using fs  saved in .csv and .xlsx files        
+|   │   ├──test_random_selection/                 # It contains the test results without using fs  saved in .csv and .xlsx files  
+|   │   ├──grids_0_1/                             # It contains the grids used in my case of study at 0.1° resolution
+|   │   ├──grids_0_01/                            # It contains the grids used in my case of study at 0.01° resolution
+|   │   ├──grids_0_066/                           # It contains the grids used in my case of study at 0.066 resolution
+|   │   ├──images/                                # It contains images used in this branch
