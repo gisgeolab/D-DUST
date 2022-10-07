@@ -16,3 +16,7 @@ notebooks/test
 .DS_Store
 notebooks/assets/.DS_Store
 *.pyc
+notebooks/assets/AI_trends.csv
+notebooks/assets/XAI_trends.csv
+notebooks/google_trends.ipynb
+notebooks/AI.png
