@@ -24,7 +24,7 @@ An overview of how input and output of the different notebooks are used is displ
 
 
 ```bash
-root/ 
+thesis_MB/ 
 ├── README.md                                     # Readme file
 ├── notebook/                                     # Folder containing notebooks implemented in my work thesis
     ├──fs_results.ipynb                           # notebook used for computing Feature Selection
