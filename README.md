@@ -21,6 +21,7 @@ An overview of how input and output of the different notebooks are used is displ
 
 
 ### Structure of folders
+<br>
 ```bash
 root/ 
 ├── README.md                                     # Readme file
