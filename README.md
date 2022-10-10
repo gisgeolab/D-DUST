@@ -3,8 +3,7 @@ In this branch you can find each tool used for the *feature selection* and *ML m
 
 
 ## Feature Selection
-In order to evaluate a weighted score for each variable [fs_results.ipynb](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/fs_results.ipynb) is implemented. 
-
+- [fs_results.ipynb](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/fs_results.ipynb): it's used to compute feature selections. The notebook provide a GUI composed by widgets which help for feature selection configuration;
 ## ML Models
 The results of the feature selection (which are in the folder [assets/fs_results](https://github.com/opengeolab/D-DUST/tree/thesis_MB/notebooks/assets/fs_results)) are used for building 2 models. Each of them are implemented in these notebooks:
 - *[Keras prediction model](https://github.com/opengeolab/D-DUST/blob/thesis_MB/notebooks/Keras_prediction_model.ipynb)*: Prediction model based on neural networks regression;
