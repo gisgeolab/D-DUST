@@ -1,7 +1,4 @@
-'''''
-This file contain each method imported by the notebook in this repository. Each one of them is explained through docstring documentation.
-If a method is marked with [GENERAL] it means that can be used generally for other cases of study
-   '''''
+
 from plotly.subplots import make_subplots
 import scipy.stats
 import pandas as pd
@@ -15,7 +12,10 @@ from sklearn.tree import DecisionTreeClassifier
 import plotly.graph_objects as go
 import warnings
 import borda.count
-
+'''''
+This file contain each method imported by the notebook in this repository. Each one of them is explained through docstring documentation.
+If a method is marked with [GENERAL] it means that can be used generally for other cases of study
+   '''''
 def borda_voting(dataframe):
     """ [GENERAL]
     :param dataframe: Results where each column represent score obtained by each method
