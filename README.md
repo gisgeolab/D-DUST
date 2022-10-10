@@ -32,7 +32,7 @@ thesis_MB/
     ├──model.ipynb                                # notebook used for showing results achieved by ML models
     ├──buffer_knn.ipynb                           # notebook used for showing how KNN is performed in order to increase the size of ARPA observation
     ├──fs/                                        # It contains package in which I collect method implemented and used by the notebooks
-        ├──methods.py
+        ├──methods.py                             # each methods used in notebooks developed are stored here
         ├──_init_.py
     ├──assets/    
         ├──fs_results/                            # It contains the fs results already run and saved in .csv files
