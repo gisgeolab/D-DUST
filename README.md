@@ -47,4 +47,4 @@ The data repository created in the WP2, will be used in the WP4 concerning monit
 
 ---
 
-<ins><b>Authors</b></ins>: <b>*Daniele Oxoli*</b> (daniele.oxoli@polimi.it), <b>*Emanuele Capizzi*</b> (emanuele.capizzi@polimi.it), <b>*Lorenzo Gianquintireri*</b> (lorenzo.gianquintieri@polimi.it), <b>*Matteo Bresciani*</b> (matteo.bresciani@mail.polimi.it) - Politecnico di Milano, 2022.
+<ins><b>Authors</b></ins>: <b>*Daniele Oxoli*</b> (daniele.oxoli@polimi.it), <b>*Emanuele Capizzi*</b> (emanuele.capizzi@polimi.it), <b>*Lorenzo Gianquintireri*</b> (lorenzo.gianquintieri@polimi.it), <b>*Jesus Rodrigo Cedeno Jimenez*</b> (jesusrodrigo.cedeno@polimi.it), <b>*Matteo Bresciani*</b> (matteo.bresciani@mail.polimi.it) - Politecnico di Milano, 2022.
