@@ -20,3 +20,4 @@ notebooks/assets/AI_trends.csv
 notebooks/assets/XAI_trends.csv
 notebooks/google_trends.ipynb
 notebooks/AI.png
+*.ipynb
