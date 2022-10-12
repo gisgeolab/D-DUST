@@ -61,7 +61,8 @@ def process_data(data, k, sensor):
     :param sensor: name of the variable to increase its number of observation
     :return: Dataset with the observation of 'sensor' increased (and without not used and categorical variables)
     """
-    data = increase_data(data, sensor, k)
+    if(k!=1):
+        data = increase_data(data, sensor, k)
     #catagorical and not used variables
     data.pop('dusaf')
     data.pop('siarl')
