@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from plotly.subplots import make_subplots
 import scipy.stats
 import pandas as pd
@@ -12,10 +12,13 @@ from sklearn.tree import DecisionTreeClassifier
 import plotly.graph_objects as go
 import warnings
 import borda.count
+
 '''''
 This file contain each method imported by the notebook in this repository. Each one of them is explained through docstring documentation.
 If a method is marked with [GENERAL] it means that can be used generally for other cases of study
    '''''
+
+
 def borda_voting(dataframe):
     """ [GENERAL]
     :param dataframe: Results where each column represent score obtained by each method
@@ -26,7 +29,7 @@ def borda_voting(dataframe):
     selection = borda.count.Election()
     selection.set_candidates(labels.tolist())
     for col in dataframe_new.columns:
-        #Borda count
+        # Borda count
         method_ranking = getRanks(dataframe_new[col].tolist(), labels)
         voter = borda.count.Voter(selection, col)
         voter.votes(method_ranking)
@@ -38,6 +41,7 @@ def borda_voting(dataframe):
     results = results.reset_index()
 
     return results['Scores']
+
 
 def getRanks(values, labels):
     """   [GENERAL]
@@ -61,9 +65,9 @@ def process_data(data, k, sensor):
     :param sensor: name of the variable to increase its number of observation
     :return: Dataset with the observation of 'sensor' increased (and without not used and categorical variables)
     """
-    if(k!=1):
+    if (k != 1):
         data = increase_data(data, sensor, k)
-    #catagorical and not used variables
+    # catagorical and not used variables
     data.pop('dusaf')
     data.pop('siarl')
     data.pop('top')
@@ -75,7 +79,7 @@ def process_data(data, k, sensor):
     data.pop('area')
     data.pop('aq_zone')
     data.pop('wind_dir_st')
-    data.pop(sensor[: -2]+'int')
+    data.pop(sensor[: -2] + 'int')
 
     return data
 
@@ -116,6 +120,7 @@ def add_buffer(points, data, uncleaned_data, k, sensor):
             uncleaned_data.at[idx[i], sensor] = uncleaned_data.loc[idx[i]][sensor[:-2] + 'int']
     return uncleaned_data
 
+
 def NormalizeData1D(data):
     """   [GENERAL]
 
@@ -126,7 +131,6 @@ def NormalizeData1D(data):
     scaler = MinMaxScaler()
     result = scaler.fit_transform(data).reshape((-1,))
     return result
-
 def show_bars(labels_list, matrix, method, geopackages, order):
     """
 
@@ -142,7 +146,7 @@ def show_bars(labels_list, matrix, method, geopackages, order):
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
         labels = labels_list[index]
-        #Decrescent order of the scores
+        # Decrescent order of the scores
         if (order == 'Scores'):
             zipped = list(zip(list(labels), list(values)))
             temp = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
@@ -175,7 +179,7 @@ def show_bars_log(labels_list, matrix, method, geopackages, order):
     fig = make_subplots(rows=int(len(geopackages) / 2) + 1, cols=2, subplot_titles=titles)
     for index, values in enumerate(matrix):
         labels = labels_list[index]
-        #Decrescent order of the scores
+        # Decrescent order of the scores
         if (order == 'Scores'):
             zipped = list(zip(list(labels), list(values)))
             temp = pd.DataFrame(data=zipped, columns=['Features', 'Scores'])
@@ -184,13 +188,14 @@ def show_bars_log(labels_list, matrix, method, geopackages, order):
             labels = temp['Features']
 
         fig.add_trace(go.Bar(x=labels, y=values), row=int(index / 2) + 1, col=index % 2 + 1)
-        #Scale of the y-axis is in log scale
+        # Scale of the y-axis is in log scale
         fig.update_yaxes(type="log", row=int(index / 2) + 1, col=index % 2 + 1)
         fig.update_xaxes(type="category", row=int(index / 2) + 1, col=index % 2 + 1)
 
     fig.update_layout(height=1000, title_text=method)
     fig.update_layout(showlegend=False, autosize=True)
     fig.show()
+
 
 def fs_results_computation(X, Y):
     """ [GENERAL]
@@ -238,10 +243,11 @@ def fs_results_computation(X, Y):
     model = RandomForestRegressor()
     model.fit(X, Y)
     results['RF Importance'] = model.feature_importances_
-    
-    #Recursive Feature Selection
-    results['RFS']= recursive_feature_selection(X, Y.astype(int), 20)
+
+    # Recursive Feature Selection
+    results['RFS'] = recursive_feature_selection(X, Y.astype(int), 20)
     return results
+
 
 def variance_threshold(data, th):
     """ [GENERAL]
@@ -265,6 +271,7 @@ def variance_threshold(data, th):
 
     return results
 
+
 def recursive_feature_selection(X, y, select):
     """[GENERAL]
 
@@ -285,12 +292,13 @@ def recursive_feature_selection(X, y, select):
     support = rfe.support_
     res = []
     for s in support:
-            if(s == True):
-                res.append(1)
-            else:
-                res.append(0)
+        if (s == True):
+            res.append(1)
+        else:
+            res.append(0)
     results['Ranking'] = res
     return results['Ranking']
+
 
 def set_labels_df(dictionary, keys):
     """
@@ -304,3 +312,40 @@ def set_labels_df(dictionary, keys):
         if (len(dictionary[k]['Features'].tolist()) > len(labels)):
             labels = dictionary[k]['Features'].tolist()
     return labels
+
+
+def quasi_zero_variance(X, freqCut, uniqueCut):
+    """
+
+    :param X: Input dataframe
+    :param freqCut:  threshold value
+    :param uniqueCut:  threshold
+    :return: return a list of 1 or 0, corresponding if a variable is discard (0) or not (1). A variable is discarded if,considering its sample,
+    (percentage of unique values > freqCut) && (the ratio of the most prevalent over the second most prevalent value > uniqueCut)
+    """
+    scores = []
+    for index, col in enumerate(X.columns):
+        items_counts = X[col].value_counts()
+        if(items_counts.iloc[0] == len(X[col])):
+            scores.append(0)
+        else:
+            if items_counts.iloc[0] / len(X[col]) > uniqueCut and items_counts.iloc[0] / items_counts.iloc[1] > freqCut:
+                scores.append(0)
+            else:
+                scores.append(1)
+    results = pd.DataFrame()
+    results['Features'] = X.columns
+    results['Scores'] = scores
+    return results
+
+def get_tuple(s):
+
+    d = s[2:4]
+    m = s[0:2]
+    y = s[10:14]
+    s = d + '/' +m + '/' + y
+    element =  datetime.strptime(s, "%d/%m/%Y")
+
+    return datetime.timestamp(element)
+
+
