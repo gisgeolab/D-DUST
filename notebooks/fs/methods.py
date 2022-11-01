@@ -283,7 +283,7 @@ def recursive_feature_selection(X, y, select):
     labels = list(X.columns)
     warnings.filterwarnings("ignore")
     # define RFE
-    rfe = RFE(estimator=RandomForestRegressor(), n_features_to_select=select)
+    rfe = RFE(estimator=RandomForestRegressor(), n_features_to_select=None)
     # fit RFE
     rfe.fit(X, y)
     # summarize all features
