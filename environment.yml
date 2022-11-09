@@ -14,9 +14,10 @@ dependencies:
   - rioxarray
   - pip
   - pip:
-    - ee
     - matplotlib
     - plotly
     - shapely
     - scipy
+    - sodapy
+    - cdsapi
     
