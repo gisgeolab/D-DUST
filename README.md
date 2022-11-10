@@ -20,7 +20,20 @@ These notebooks are used to require data (e.g. from API services), perform data 
 
 ## Environment setup
 
-It is possible to set up a virtual Python environment using [Anaconda](https://anaconda.org). Open the **Anaconda terminal** and create an environment called `ddust`. To do this type: <br>
+It is possible to set up a virtual Python environment using [Anaconda](https://anaconda.org). 
+
+### 1 - Install using the .yml file
+
+Open the terminal, move to the folder containing the `environment.yml` file and type: 
+```sh
+$ conda env create -f environment.yml
+```
+This command will automatically build the conda environment containing the libraries for data processing and features selection.
+
+### 2 - Install libraries manually
+
+If the previous procedure doesn't work (e.g. the installation get stuck), it is possible to create an environment using the following commands.
+Open the **Anaconda terminal** and create an environment called `ddust`. To do this type: <br>
 ```sh
 $ conda create -n ddust
 ```
@@ -32,13 +45,19 @@ $ conda activate ddust
 
 Install the required libraries to run the notebooks for data downloading and aggregation on a user-defined grid:<br>
 ```sh
-$  python conda install -c conda-forge rasterio geopandas geemap xarray rioxarray rasterstats
+$  conda install -c conda-forge rasterio geopandas geemap xarray rioxarray rasterstats
 ```
 
 Additionally, it is necessary to install `cdsapi` to access Copernicus data and `sodapy` to access ARPA API: <br>
 ```sh
 $ pip install cdsapi
 $ pip install sodapy
+```
+
+To install libraries required by the Feature Selection notebook: <br>
+```sh
+$ pip install borda
+$ pip install seaborn
 ```
 
 ## Repository structure

@@ -1,23 +1,19 @@
-name: ddust
+name: ddust_test2
 channels:
   - conda-forge
+  - defaults
 dependencies:
-  - python
-  - geopandas
-  - geemap
-  - numpy
-  - pandas
-  - requests
-  - ipywidgets
-  - rasterio
-  - rasterstats
-  - rioxarray
-  - pip
+  - python=3.8.*
+  - rasterio=1.3.*
+  - geopandas=0.12.*
+  - geemap=0.17.*
+  - xarray=2022.11.*
+  - rioxarray=0-12.*
+  - rasterstats=0.17.*
+  - seaborn=0.12.*
+  - pip=22.3.*
   - pip:
-    - matplotlib
-    - plotly
-    - shapely
-    - scipy
-    - sodapy
-    - cdsapi
+    - borda==0.1
+    - sodapy==2.2.0
+    - cdsapi==0.5.*
     
