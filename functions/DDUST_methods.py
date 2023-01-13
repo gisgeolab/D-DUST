@@ -31,6 +31,7 @@ def meteo_sensor(year):
     Function for selecting the correct link for downloading zipped .csv meteorological data from ARPA sensors
     """
     switcher = {
+        '2022': "https://www.dati.lombardia.it/download/mvvc-nmzv/application%2Fzip",
         '2021': "https://www.dati.lombardia.it/download/49n9-866s/application%2Fzip",
         '2020': "https://www.dati.lombardia.it/download/erjn-istm/application%2Fzip",
         '2019': "https://www.dati.lombardia.it/download/wrhf-6ztd/application%2Fzip",
